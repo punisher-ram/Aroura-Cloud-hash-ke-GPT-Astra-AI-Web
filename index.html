@@ -1,0 +1,1847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#07110d">
+    <title>Hash&ke GPT Astra AI</title>
+    <style>
+        :root {
+            --bg: #050b08;
+            --bg-soft: #07120e;
+            --panel: rgba(8, 20, 15, 0.88);
+            --panel-2: #0a1913;
+            --panel-3: #0d2119;
+            --border: #17352a;
+            --border-strong: #245743;
+            --text: #ecfff7;
+            --muted: #819a90;
+            --muted-2: #5f766d;
+            --emerald: #10b981;
+            --emerald-2: #34d399;
+            --emerald-dark: #047857;
+            --danger: #f87171;
+            --shadow: rgba(0, 0, 0, 0.42);
+            --radius: 16px;
+        }
+
+        body.light {
+            --bg: #f4faf7;
+            --bg-soft: #edf7f2;
+            --panel: rgba(255, 255, 255, 0.92);
+            --panel-2: #ffffff;
+            --panel-3: #eff8f3;
+            --border: #d7e9e0;
+            --border-strong: #b5d9c9;
+            --text: #10251c;
+            --muted: #627a70;
+            --muted-2: #789087;
+            --emerald: #059669;
+            --emerald-2: #047857;
+            --emerald-dark: #065f46;
+            --shadow: rgba(16, 37, 28, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            overflow: hidden;
+            color: var(--text);
+            background:
+                radial-gradient(circle at 72% 5%, rgba(16, 185, 129, 0.14), transparent 31%),
+                radial-gradient(circle at 18% 80%, rgba(5, 150, 105, 0.07), transparent 27%),
+                var(--bg);
+            font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            transition: background 180ms ease, color 180ms ease;
+        }
+
+        button,
+        input,
+        textarea,
+        select {
+            font: inherit;
+        }
+
+        button,
+        label {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        ::selection {
+            background: rgba(52, 211, 153, 0.28);
+        }
+
+        .app {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: 272px minmax(0, 1fr) 292px;
+        }
+
+        .sidebar,
+        .rightbar,
+        .topbar,
+        .composer-shell {
+            background: var(--panel);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+        }
+
+        .sidebar {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            padding: 16px 13px;
+            border-right: 1px solid var(--border);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 7px 8px 17px;
+        }
+
+        .logo,
+        .hero-logo {
+            display: grid;
+            place-items: center;
+            color: #02140d;
+            font-weight: 950;
+            background: linear-gradient(145deg, #6ee7b7, #10b981 52%, #047857);
+            box-shadow: 0 0 34px rgba(16, 185, 129, 0.22);
+        }
+
+        .logo {
+            width: 39px;
+            height: 39px;
+            border-radius: 12px;
+            flex: 0 0 auto;
+        }
+
+        .brand-title {
+            font-size: 13px;
+            font-weight: 900;
+            letter-spacing: -0.01em;
+        }
+
+        .brand-title span,
+        .top-title span,
+        .hash {
+            color: var(--emerald-2);
+        }
+
+        .brand-subtitle {
+            display: block;
+            margin-top: 3px;
+            color: var(--muted-2);
+            font-size: 9px;
+            letter-spacing: 0.13em;
+            text-transform: uppercase;
+        }
+
+        .new-chat {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid var(--border-strong);
+            border-radius: 12px;
+            color: #d9fff0;
+            background: linear-gradient(180deg, #103326, #0c261c);
+            font-weight: 850;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            transition: 160ms ease;
+        }
+
+        .new-chat:hover {
+            border-color: var(--emerald);
+            transform: translateY(-1px);
+        }
+
+        .nav {
+            display: grid;
+            gap: 4px;
+            margin-top: 13px;
+        }
+
+        .nav-button,
+        .session-button,
+        .side-button {
+            width: 100%;
+            border: 1px solid transparent;
+            border-radius: 10px;
+            color: var(--muted);
+            background: transparent;
+            text-align: left;
+            transition: 150ms ease;
+        }
+
+        .nav-button {
+            padding: 9px 10px;
+            font-size: 12px;
+        }
+
+        .nav-button:hover,
+        .nav-button.active,
+        .session-button:hover,
+        .session-button.active {
+            color: var(--text);
+            background: var(--panel-3);
+            border-color: var(--border);
+        }
+
+        .section-label {
+            margin: 18px 8px 7px;
+            color: var(--muted-2);
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .sessions {
+            min-height: 0;
+            overflow-y: auto;
+            padding-right: 2px;
+        }
+
+        .session-button {
+            display: block;
+            padding: 9px 10px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            font-size: 11px;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding: 13px 7px 3px;
+            border-top: 1px solid var(--border);
+            color: var(--muted-2);
+            font-size: 9px;
+            line-height: 1.65;
+        }
+
+        .signature-mini {
+            color: var(--emerald-2);
+            font-size: 12px;
+            font-weight: 950;
+            letter-spacing: 0.04em;
+        }
+
+        .main {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topbar {
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 0 21px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .top-title {
+            font-size: 14px;
+            font-weight: 900;
+            letter-spacing: -0.015em;
+        }
+
+        .top-subtitle {
+            margin-top: 3px;
+            color: var(--muted-2);
+            font-size: 9px;
+        }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .model-select,
+        .icon-button,
+        .toolbar-button,
+        .wide-button {
+            border: 1px solid var(--border);
+            color: var(--muted);
+            background: var(--panel-2);
+            border-radius: 9px;
+            transition: 150ms ease;
+        }
+
+        .model-select {
+            width: 215px;
+            padding: 8px 10px;
+            outline: none;
+        }
+
+        .icon-button {
+            width: 35px;
+            height: 35px;
+            display: grid;
+            place-items: center;
+            padding: 0;
+            font-size: 15px;
+        }
+
+        .model-select:hover,
+        .icon-button:hover,
+        .toolbar-button:hover,
+        .wide-button:hover {
+            border-color: var(--border-strong);
+            color: var(--text);
+        }
+
+        .chat {
+            min-height: 0;
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px 5vw 24px;
+            scroll-behavior: smooth;
+        }
+
+        .welcome {
+            max-width: 760px;
+            margin: 8vh auto 0;
+            text-align: center;
+        }
+
+        .hero-logo {
+            width: 76px;
+            height: 76px;
+            margin: 0 auto 18px;
+            border-radius: 24px;
+            font-size: 30px;
+        }
+
+        .welcome h1 {
+            margin: 0 0 9px;
+            font-size: clamp(27px, 3vw, 36px);
+            letter-spacing: -0.045em;
+        }
+
+        .welcome p {
+            max-width: 600px;
+            margin: 0 auto 23px;
+            color: var(--muted);
+            line-height: 1.65;
+            font-size: 13px;
+        }
+
+        .chips {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .chip {
+            padding: 9px 13px;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            color: var(--muted);
+            background: var(--panel-2);
+            font-size: 11px;
+        }
+
+        .chip:hover {
+            color: var(--emerald-2);
+            border-color: var(--border-strong);
+        }
+
+        .messages {
+            max-width: 920px;
+            margin: 0 auto;
+            display: grid;
+            gap: 18px;
+        }
+
+        .message {
+            display: flex;
+            gap: 11px;
+            animation: message-in 180ms ease;
+        }
+
+        @keyframes message-in {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .avatar {
+            width: 31px;
+            height: 31px;
+            flex: 0 0 auto;
+            display: grid;
+            place-items: center;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--emerald-2);
+            background: var(--panel-3);
+            font-size: 9px;
+            font-weight: 950;
+        }
+
+        .message.user .avatar {
+            color: #d8fff0;
+            background: linear-gradient(145deg, #104333, #0c2a20);
+        }
+
+        .bubble-wrap {
+            min-width: 0;
+            max-width: calc(100% - 43px);
+        }
+
+        .meta {
+            margin: 0 0 5px;
+            color: var(--muted-2);
+            font-size: 9px;
+        }
+
+        .bubble {
+            padding: 13px 15px;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            color: var(--text);
+            background: var(--panel-2);
+            line-height: 1.65;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            box-shadow: 0 10px 30px var(--shadow);
+        }
+
+        .message.user .bubble {
+            background: var(--panel-3);
+            border-color: #1c4b39;
+        }
+
+        .message.thinking .bubble {
+            color: var(--muted);
+        }
+
+        .typing {
+            display: inline-flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .typing span {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--emerald-2);
+            animation: blink 900ms infinite ease-in-out;
+        }
+
+        .typing span:nth-child(2) { animation-delay: 120ms; }
+        .typing span:nth-child(3) { animation-delay: 240ms; }
+
+        @keyframes blink {
+            0%, 60%, 100% { opacity: 0.25; transform: translateY(0); }
+            30% { opacity: 1; transform: translateY(-2px); }
+        }
+
+        .message-actions {
+            display: flex;
+            gap: 5px;
+            margin-top: 7px;
+        }
+
+        .message-actions button {
+            padding: 5px 7px;
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            color: var(--muted-2);
+            background: transparent;
+            font-size: 9px;
+        }
+
+        .message-actions button:hover {
+            color: var(--emerald-2);
+            border-color: var(--border-strong);
+        }
+
+        .composer-shell {
+            padding: 11px 21px 17px;
+            border-top: 1px solid var(--border);
+        }
+
+        .composer {
+            max-width: 920px;
+            margin: 0 auto;
+            overflow: hidden;
+            border: 1px solid var(--border-strong);
+            border-radius: 17px;
+            background: var(--panel-2);
+            box-shadow: 0 20px 60px var(--shadow);
+        }
+
+        .file-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 9px 12px 0;
+        }
+
+        .file-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 8px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--muted);
+            background: var(--panel-3);
+            font-size: 9px;
+        }
+
+        .file-tag button {
+            padding: 0;
+            border: 0;
+            color: var(--muted-2);
+            background: transparent;
+        }
+
+        .file-tag button:hover {
+            color: var(--danger);
+        }
+
+        .composer textarea {
+            width: 100%;
+            min-height: 74px;
+            max-height: 200px;
+            display: block;
+            padding: 15px 16px 10px;
+            border: 0;
+            outline: 0;
+            resize: vertical;
+            color: var(--text);
+            background: transparent;
+            line-height: 1.55;
+        }
+
+        .composer textarea::placeholder {
+            color: var(--muted-2);
+        }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px;
+            border-top: 1px solid var(--border);
+        }
+
+        .toolbar-button,
+        .toolbar-select,
+        .attach-button {
+            min-height: 31px;
+            padding: 6px 9px;
+            font-size: 10px;
+        }
+
+        .toolbar-select {
+            outline: none;
+        }
+
+        .attach-button {
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            color: var(--muted);
+            background: var(--panel-2);
+            cursor: pointer;
+        }
+
+        .attach-button input {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .send-button {
+            min-height: 31px;
+            margin-left: auto;
+            padding: 6px 12px;
+            border: 1px solid #20c997;
+            border-radius: 9px;
+            color: #02140d;
+            background: linear-gradient(135deg, #34d399, #059669);
+            font-weight: 950;
+            box-shadow: 0 8px 22px rgba(16, 185, 129, 0.18);
+        }
+
+        .send-button:hover {
+            filter: brightness(1.07);
+            transform: translateY(-1px);
+        }
+
+        .send-button:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .rightbar {
+            overflow-y: auto;
+            padding: 17px 15px;
+            border-left: 1px solid var(--border);
+        }
+
+        .card {
+            margin-bottom: 10px;
+            padding: 13px;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            background: rgba(8, 24, 17, 0.64);
+        }
+
+        body.light .card {
+            background: rgba(255, 255, 255, 0.76);
+        }
+
+        .card-title {
+            margin: 0 0 10px;
+            color: var(--muted-2);
+            font-size: 9px;
+            font-weight: 850;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 7px 0;
+            border-bottom: 1px solid rgba(23, 53, 42, 0.65);
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        .stat:last-child {
+            border-bottom: 0;
+        }
+
+        .stat strong {
+            max-width: 160px;
+            overflow: hidden;
+            color: var(--text);
+            font-size: 10px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .wide-button {
+            width: 100%;
+            margin-bottom: 7px;
+            padding: 9px 10px;
+            text-align: left;
+            font-size: 10px;
+        }
+
+        .signature {
+            color: var(--emerald-2);
+            font-size: 23px;
+            font-weight: 950;
+            letter-spacing: 0.02em;
+        }
+
+        .signature-sub {
+            margin-top: 3px;
+            color: var(--muted-2);
+            font-size: 9px;
+        }
+
+        .shortcut {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            color: var(--muted);
+            font-size: 9px;
+        }
+
+        kbd {
+            padding: 2px 5px;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            color: var(--text);
+            background: var(--panel-3);
+            font-family: inherit;
+            font-size: 8px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            display: grid;
+            place-items: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.64);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal {
+            width: min(700px, 94vw);
+            max-height: 82vh;
+            overflow: auto;
+            padding: 18px;
+            border: 1px solid var(--border-strong);
+            border-radius: 17px;
+            background: var(--panel-2);
+            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.55);
+        }
+
+        .modal-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .modal-head h2 {
+            margin: 0;
+            font-size: 17px;
+        }
+
+        .modal-close {
+            width: 31px;
+            height: 31px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--muted);
+            background: transparent;
+        }
+
+        .search-input,
+        .modal-input {
+            width: 100%;
+            margin-top: 13px;
+            padding: 11px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            outline: none;
+            color: var(--text);
+            background: var(--bg-soft);
+        }
+
+        .search-input:focus,
+        .modal-input:focus {
+            border-color: var(--border-strong);
+        }
+
+        .result {
+            margin-top: 7px;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            color: var(--muted);
+            background: var(--bg-soft);
+            cursor: pointer;
+        }
+
+        .result:hover {
+            border-color: var(--border-strong);
+        }
+
+        .result strong {
+            color: var(--text);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 7px;
+            margin-top: 12px;
+        }
+
+        .modal-actions button {
+            padding: 8px 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--muted);
+            background: var(--panel-3);
+        }
+
+        .error-box {
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid rgba(248, 113, 113, 0.28);
+            border-radius: 9px;
+            color: #fecaca;
+            background: rgba(127, 29, 29, 0.18);
+            font-size: 10px;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 1080px) {
+            .app {
+                grid-template-columns: 230px minmax(0, 1fr);
+            }
+
+            .rightbar {
+                display: none;
+            }
+
+            .model-select {
+                width: 190px;
+            }
+        }
+
+        @media (max-width: 720px) {
+            .app {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .topbar {
+                min-height: 62px;
+                padding: 0 12px;
+            }
+
+            .top-subtitle {
+                display: none;
+            }
+
+            .model-select {
+                width: 150px;
+            }
+
+            .chat {
+                padding: 20px 12px;
+            }
+
+            .composer-shell {
+                padding: 9px 10px 12px;
+            }
+
+            .welcome {
+                margin-top: 7vh;
+            }
+
+            .toolbar {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="logo">A</div>
+                <div>
+                    <div class="brand-title">Hash&ke GPT <span>Astra AI</span></div>
+                    <span class="brand-subtitle">Private AI Workspace</span>
+                </div>
+            </div>
+
+            <button class="new-chat" type="button" onclick="newChat()">＋ New conversation</button>
+
+            <nav class="nav" aria-label="Workspace navigation">
+                <button class="nav-button active" type="button">⌂ &nbsp; Chat</button>
+                <button class="nav-button" type="button" onclick="searchUI()">⌕ &nbsp; Search conversations</button>
+                <button class="nav-button" type="button" onclick="listSaved('Favorites')">★ &nbsp; Favorites</button>
+                <button class="nav-button" type="button" onclick="listSaved('Bookmarks')">🔖 &nbsp; Bookmarks</button>
+                <button class="nav-button" type="button" onclick="analytics()">◒ &nbsp; Analytics</button>
+                <button class="nav-button" type="button" onclick="settings()">⚙ &nbsp; Settings</button>
+            </nav>
+
+            <div class="section-label">Conversations</div>
+            <div id="sessions" class="sessions"></div>
+
+            <div class="sidebar-footer">
+                <div class="signature-mini">BY HASH</div>
+                Hash&ke GPT Astra AI · Local browser memory
+            </div>
+        </aside>
+
+        <main class="main">
+            <header class="topbar">
+                <div>
+                    <div class="top-title">Hash&ke GPT <span>Astra AI</span></div>
+                    <div class="top-subtitle">Your intelligent workspace</div>
+                </div>
+
+                <div class="top-actions">
+                    <select id="model" class="model-select" aria-label="AI model">
+                        <option value="">Loading models…</option>
+                    </select>
+                    <button class="icon-button" type="button" title="Refresh models" onclick="models()">↻</button>
+                    <button class="icon-button" type="button" title="Toggle appearance" onclick="theme()">◐</button>
+                </div>
+            </header>
+
+            <section id="chat" class="chat">
+                <div id="welcome" class="welcome">
+                    <div class="hero-logo">A</div>
+                    <h1>What can Astra help you build?</h1>
+                    <p>
+                        A polished AI workspace with persistent local memory, Gemini models,
+                        file context, URL context and practical tools — built for Hash&ke GPT Astra AI.
+                    </p>
+                    <div class="chips">
+                        <button class="chip" type="button" onclick="quick('Explain something complex in a simple, practical way.')">Explain something</button>
+                        <button class="chip" type="button" onclick="quick('Help me design a clean software architecture for my project.')">Design software</button>
+                        <button class="chip" type="button" onclick="quick('Analyze the attached information and identify the most important insights.')">Analyze files</button>
+                        <button class="chip" type="button" onclick="quick('Give me a creative idea I can actually build.')">Brainstorm</button>
+                    </div>
+                </div>
+
+                <div id="messages" class="messages"></div>
+            </section>
+
+            <div class="composer-shell">
+                <div class="composer">
+                    <div id="files" class="file-row"></div>
+                    <textarea id="input" placeholder="Message Hash&ke GPT Astra AI…  (Ctrl+Enter to send)"></textarea>
+                    <div class="toolbar">
+                        <label class="attach-button">
+                            ＋ File
+                            <input id="file" type="file" multiple>
+                        </label>
+                        <button class="toolbar-button" type="button" onclick="prompts()">Prompts</button>
+                        <button class="toolbar-button" type="button" onclick="urlUI()">URL</button>
+                        <select id="temp" class="toolbar-button toolbar-select" aria-label="Response style">
+                            <option value="0.2">Precise</option>
+                            <option value="0.5" selected>Balanced</option>
+                            <option value="0.8">Creative</option>
+                            <option value="1">Wild</option>
+                        </select>
+                        <button id="send" class="send-button" type="button" onclick="send()">Send ↵</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <aside class="rightbar">
+            <div class="card">
+                <div class="card-title">Workspace</div>
+                <div class="stat"><span>Model</span><strong id="modelStat">—</strong></div>
+                <div class="stat"><span>Memory</span><strong>IndexedDB</strong></div>
+                <div class="stat"><span>Session</span><strong id="sessionStat">—</strong></div>
+                <div class="stat"><span>Messages</span><strong id="messageStat">0</strong></div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Quick controls</div>
+                <button class="wide-button" type="button" onclick="regen()">↻ &nbsp; Regenerate last answer</button>
+                <button class="wide-button" type="button" onclick="exportChat()">⇩ &nbsp; Export conversation</button>
+                <button class="wide-button" type="button" onclick="rename()">✎ &nbsp; Rename conversation</button>
+                <button class="wide-button" type="button" onclick="clearCurrentChat()">⌫ &nbsp; Clear messages</button>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Signature</div>
+                <div class="signature">BY HASH</div>
+                <div class="signature-sub">Hash&ke GPT Astra AI</div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Shortcuts</div>
+                <div class="shortcut"><span>Send</span><kbd>Ctrl + Enter</kbd></div>
+                <div class="shortcut"><span>New chat</span><kbd>Ctrl + N</kbd></div>
+                <div class="shortcut"><span>Search</span><kbd>Ctrl + F</kbd></div>
+            </div>
+        </aside>
+    </div>
+
+    <div id="modalBackdrop" class="modal-backdrop hidden" onclick="backdropClose(event)">
+        <div class="modal" role="dialog" aria-modal="true">
+            <div class="modal-head">
+                <h2 id="modalTitle">Astra AI</h2>
+                <button class="modal-close" type="button" onclick="closeModal()">×</button>
+            </div>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        /* ============================================================
+           Hash&ke GPT Astra AI — Browser Edition
+           All application JavaScript is intentionally kept in this file.
+           ============================================================ */
+
+        const GEMINI_API_KEY = "AQ.Ab8RN6L8mJTShXj_iPCkKRIqgII8WrVUh6g1JUv9Ib1sw5hBhQ";
+        const GEMINI_API_BASE = "https://generativelanguage.googleapis.com/v1beta";
+
+        const GEMINI_MODELS = [
+            { label: "Gemini 3 Flash", id: "gemini-3-flash" },
+            { label: "Gemini 3.1 Flash Lite", id: "gemini-3.1-flash-lite" },
+            { label: "Gemini 3.5 Flash", id: "gemini-3.5-flash" },
+            { label: "Gemini 3.5 Flash Lite", id: "gemini-3.5-flash-lite" },
+            { label: "Gemini 3.6 Flash", id: "gemini-3.6-flash" },
+            { label: "Gemini 3.7 Flash", id: "gemini-3.7-flash" },
+            { label: "Gemini 3.8 Flash", id: "gemini-3.8-flash" },
+            { label: "Gemma 4 31B", id: "gemma-4-31b-it" }
+        ];
+        const DATABASE_NAME = "hashke_astra_ai_v3";
+
+        const state = {
+            db: null,
+            sessions: [],
+            currentId: null,
+            files: [],
+            busy: false
+        };
+
+        const $ = (id) => document.getElementById(id);
+
+        function makeId() {
+            if (window.crypto && crypto.randomUUID) {
+                return crypto.randomUUID();
+            }
+            return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? "").replace(/[&<>"']/g, (character) => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;"
+            })[character]);
+        }
+
+        function currentSession() {
+            return state.sessions.find((session) => session.id === state.currentId) || null;
+        }
+
+        function openDatabase() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DATABASE_NAME, 1);
+
+                request.onupgradeneeded = () => {
+                    request.result.createObjectStore("kv");
+                };
+
+                request.onsuccess = () => {
+                    state.db = request.result;
+                    resolve();
+                };
+
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        function dbGet(key) {
+            return new Promise((resolve, reject) => {
+                const request = state.db
+                    .transaction("kv", "readonly")
+                    .objectStore("kv")
+                    .get(key);
+
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        function dbPut(key, value) {
+            return new Promise((resolve, reject) => {
+                const request = state.db
+                    .transaction("kv", "readwrite")
+                    .objectStore("kv")
+                    .put(value, key);
+
+                request.onsuccess = () => resolve();
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function persist() {
+            await dbPut("sessions", state.sessions);
+        }
+
+        async function init() {
+            try {
+                await openDatabase();
+                state.sessions = (await dbGet("sessions")) || [];
+
+                if (!state.sessions.length) {
+                    await newChat(true);
+                } else {
+                    state.currentId = state.sessions[0].id;
+                    render();
+                }
+
+                await models();
+            } catch (error) {
+                console.error(error);
+                showSystemMessage(`Local memory could not be initialized: ${error.message}`);
+            }
+
+            $("input").addEventListener("keydown", (event) => {
+                if (event.key === "Enter" && event.ctrlKey) {
+                    event.preventDefault();
+                    send();
+                }
+            });
+
+            $("file").addEventListener("change", handleFiles);
+            $("model").addEventListener("change", () => {
+                $("modelStat").textContent = $("model").value || "—";
+            });
+        }
+
+        async function newChat(silent = false) {
+            const session = {
+                id: makeId(),
+                title: "New conversation",
+                messages: [],
+                created: Date.now()
+            };
+
+            state.sessions.unshift(session);
+            state.currentId = session.id;
+            state.files = [];
+            await persist();
+            render();
+
+            if (!silent) {
+                $("input").focus();
+            }
+        }
+
+        function render() {
+            const session = currentSession();
+
+            $("sessions").innerHTML = state.sessions
+                .slice(0, 40)
+                .map((item) => `
+                    <button class="session-button ${item.id === state.currentId ? "active" : ""}"
+                            type="button"
+                            onclick="selectChat('${item.id}')">
+                        ${escapeHtml(item.title)}
+                    </button>
+                `)
+                .join("");
+
+            $("sessionStat").textContent = session?.title || "—";
+            $("messageStat").textContent = String(session?.messages?.length || 0);
+            $("welcome").classList.toggle("hidden", Boolean(session?.messages?.length));
+            $("messages").innerHTML = "";
+
+            (session?.messages || []).forEach((message) => addMessage(message));
+            renderFiles();
+            scrollToBottom();
+        }
+
+        function selectChat(id) {
+            if (!state.sessions.some((session) => session.id === id)) {
+                return;
+            }
+            state.currentId = id;
+            state.files = [];
+            render();
+        }
+
+        function addMessage(message) {
+            const row = document.createElement("div");
+            row.className = `message ${message.role}`;
+
+            const avatar = document.createElement("div");
+            avatar.className = "avatar";
+            avatar.textContent = message.role === "user" ? "YOU" : "A";
+
+            const wrapper = document.createElement("div");
+            wrapper.className = "bubble-wrap";
+
+            const meta = document.createElement("div");
+            meta.className = "meta";
+            meta.textContent = `${message.role === "user" ? "You" : "Astra AI"} · ${new Date(message.time || Date.now()).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
+
+            const bubble = document.createElement("div");
+            bubble.className = "bubble";
+            bubble.textContent = message.content || "";
+
+            wrapper.append(meta, bubble);
+
+            if (message.role === "assistant" && !message.ephemeral) {
+                const actions = document.createElement("div");
+                actions.className = "message-actions";
+
+                const copyButton = document.createElement("button");
+                copyButton.type = "button";
+                copyButton.textContent = "Copy";
+                copyButton.onclick = () => copyText(message.content);
+
+                const bookmarkButton = document.createElement("button");
+                bookmarkButton.type = "button";
+                bookmarkButton.textContent = "Bookmark";
+                bookmarkButton.onclick = () => saveItem("Bookmarks", message);
+
+                const favoriteButton = document.createElement("button");
+                favoriteButton.type = "button";
+                favoriteButton.textContent = "Favorite";
+                favoriteButton.onclick = () => saveItem("Favorites", message);
+
+                actions.append(copyButton, bookmarkButton, favoriteButton);
+                wrapper.appendChild(actions);
+            }
+
+            row.append(avatar, wrapper);
+            $("messages").appendChild(row);
+        }
+
+        function addThinking() {
+            const row = document.createElement("div");
+            row.id = "thinkingRow";
+            row.className = "message thinking";
+            row.innerHTML = `
+                <div class="avatar">A</div>
+                <div class="bubble-wrap">
+                    <div class="meta">Astra AI · working</div>
+                    <div class="bubble">
+                        <span class="typing"><span></span><span></span><span></span></span>
+                    </div>
+                </div>
+            `;
+            $("messages").appendChild(row);
+            scrollToBottom();
+        }
+
+        function removeThinking() {
+            $("thinkingRow")?.remove();
+        }
+
+        function showSystemMessage(text) {
+            const row = document.createElement("div");
+            row.className = "message assistant";
+            row.innerHTML = `
+                <div class="avatar">!</div>
+                <div class="bubble-wrap">
+                    <div class="meta">System</div>
+                    <div class="bubble">${escapeHtml(text)}</div>
+                </div>
+            `;
+            $("messages").appendChild(row);
+            scrollToBottom();
+        }
+
+        function scrollToBottom() {
+            requestAnimationFrame(() => {
+                $("chat").scrollTop = $("chat").scrollHeight;
+            });
+        }
+
+        async function send() {
+            if (state.busy) {
+                return;
+            }
+
+            const text = $("input").value.trim();
+            if (!text && !state.files.length) {
+                return;
+            }
+
+            const session = currentSession();
+            if (!session) {
+                return;
+            }
+
+            let content = text || "Please analyze the attached files.";
+
+            if (state.files.length) {
+                content += "\n\n[Attached files]\n";
+                content += state.files
+                    .map((file) => {
+                        const body = file.text ? `\n${file.text.slice(0, 14000)}` : "\n[Binary attachment: content extraction is not available in this browser-only build.]";
+                        return `• ${file.name}${body}`;
+                    })
+                    .join("\n");
+            }
+
+            const userMessage = {
+                role: "user",
+                content,
+                time: Date.now()
+            };
+
+            session.messages.push(userMessage);
+
+            if (session.title === "New conversation") {
+                session.title = (text || "File analysis").slice(0, 54);
+            }
+
+            $("input").value = "";
+            state.files = [];
+            renderFiles();
+            state.busy = true;
+            $("send").disabled = true;
+
+            await persist();
+            render();
+            addThinking();
+
+            try {
+                const answer = await askGemini(session.messages);
+                removeThinking();
+
+                session.messages.push({
+                    role: "assistant",
+                    content: answer,
+                    time: Date.now()
+                });
+
+                await persist();
+                render();
+            } catch (error) {
+                removeThinking();
+                session.messages.push({
+                    role: "assistant",
+                    content: `I could not complete that request. ${error.message}`,
+                    time: Date.now()
+                });
+                await persist();
+                render();
+            } finally {
+                state.busy = false;
+                $("send").disabled = false;
+                $("input").focus();
+            }
+        }
+
+        async function askGemini(messages) {
+            if (!GEMINI_API_KEY) {
+                throw new Error("No Gemini API key is configured in index.html.");
+            }
+
+            const model = $("model").value;
+            if (!model) {
+                throw new Error("No Gemini model is selected.");
+            }
+
+            const systemInstruction = {
+                parts: [{
+                    text: "You are Astra AI inside Hash&ke GPT Astra AI. Be accurate, practical, concise when appropriate, and transparent about uncertainty. Never invent facts. If the supplied context is insufficient, say so. You can help with general questions, analysis, planning, coding, software engineering and creative work."
+                }]
+            };
+
+            const contents = messages
+                .slice(-20)
+                .filter((message) => message.role === "user" || message.role === "assistant")
+                .map((message) => ({
+                    role: message.role === "assistant" ? "model" : "user",
+                    parts: [{ text: message.content || "" }]
+                }));
+
+            const payload = {
+                systemInstruction,
+                contents,
+                generationConfig: {
+                    temperature: Number($("temp").value),
+                    maxOutputTokens: 4096
+                }
+            };
+
+            const response = await fetch(
+                `${GEMINI_API_BASE}/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(GEMINI_API_KEY)}`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(payload)
+                }
+            );
+
+            let data = null;
+            try {
+                data = await response.json();
+            } catch {
+                throw new Error(`Gemini returned HTTP ${response.status}.`);
+            }
+
+            if (!response.ok) {
+                throw new Error(data?.error?.message || `Gemini returned HTTP ${response.status}.`);
+            }
+
+            const answer = data?.candidates?.[0]?.content?.parts
+                ?.map((part) => part.text || "")
+                .join("")
+                .trim();
+
+            if (!answer) {
+                const reason = data?.candidates?.[0]?.finishReason;
+                throw new Error(reason ? `Gemini returned no text (finish reason: ${reason}).` : "Gemini returned no assistant message.");
+            }
+
+            return answer;
+        }
+
+        function renderGeminiModels(models) {
+            const select = $("model");
+            const current = select.value || GEMINI_MODELS[1].id;
+
+            select.innerHTML = models
+                .map((model) => `<option value="${escapeHtml(model.id)}">${escapeHtml(model.label)}</option>`)
+                .join("");
+
+            const matching = models.find((model) => model.id === current);
+            select.value = matching ? current : GEMINI_MODELS[1].id;
+            $("modelStat").textContent = select.options[select.selectedIndex]?.text || "—";
+        }
+
+        async function models() {
+            const select = $("model");
+            select.innerHTML = "<option value=\"\">Loading Gemini models…</option>";
+
+            try {
+                const response = await fetch(
+                    `${GEMINI_API_BASE}/models?key=${encodeURIComponent(GEMINI_API_KEY)}`
+                );
+
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data?.error?.message || `Gemini returned HTTP ${response.status}.`);
+                }
+
+                const available = (data.models || [])
+                    .map((model) => ({
+                        id: String(model.name || "").replace(/^models\//, ""),
+                        methods: model.supportedGenerationMethods || []
+                    }))
+                    .filter((model) => model.id && model.methods.includes("generateContent"));
+
+                const resolved = GEMINI_MODELS.map((wanted) => {
+                    const exact = available.find((item) => item.id === wanted.id);
+                    if (exact) {
+                        return { ...wanted, id: exact.id };
+                    }
+
+                    const normalizedLabel = wanted.label.toLowerCase().replace(/[^a-z0-9]+/g, "");
+                    const match = available.find((item) => {
+                        const normalizedId = item.id.toLowerCase().replace(/[^a-z0-9]+/g, "");
+                        return normalizedId.includes(normalizedLabel) || normalizedLabel.includes(normalizedId);
+                    });
+
+                    return match ? { ...wanted, id: match.id } : wanted;
+                });
+
+                renderGeminiModels(resolved);
+            } catch (error) {
+                renderGeminiModels(GEMINI_MODELS);
+                showSystemMessage(`Live Gemini model discovery failed: ${error.message}. The configured Gemini model list is available.`);
+            }
+        }
+
+        async function handleFiles(event) {
+            const files = Array.from(event.target.files || []);
+
+            for (const file of files) {
+                if (file.size > 15 * 1024 * 1024) {
+                    showSystemMessage(`${file.name} was skipped because it is larger than 15 MB.`);
+                    continue;
+                }
+
+                let text = "";
+                const textLike = /\.(txt|md|py|js|css|html|json|csv|xml|log|sql|yaml|yml|ts|tsx|jsx|java|c|cpp|h|hpp|sh|bat)$/i.test(file.name) || file.type.startsWith("text/");
+
+                if (textLike) {
+                    try {
+                        text = await file.text();
+                    } catch {
+                        text = "";
+                    }
+                }
+
+                state.files.push({
+                    name: file.name,
+                    type: file.type,
+                    size: file.size,
+                    text
+                });
+            }
+
+            renderFiles();
+            event.target.value = "";
+        }
+
+        function renderFiles() {
+            $("files").innerHTML = state.files
+                .map((file, index) => `
+                    <span class="file-tag">
+                        ${escapeHtml(file.name)}
+                        <button type="button" title="Remove file" onclick="removeFile(${index})">×</button>
+                    </span>
+                `)
+                .join("");
+        }
+
+        function removeFile(index) {
+            state.files.splice(index, 1);
+            renderFiles();
+        }
+
+        function quick(text) {
+            $("input").value = text;
+            $("input").focus();
+        }
+
+        async function copyText(text) {
+            try {
+                await navigator.clipboard.writeText(text);
+            } catch {
+                const area = document.createElement("textarea");
+                area.value = text;
+                document.body.appendChild(area);
+                area.select();
+                document.execCommand("copy");
+                area.remove();
+            }
+        }
+
+        function openModal(title, html) {
+            $("modalTitle").textContent = title;
+            $("modalBody").innerHTML = html;
+            $("modalBackdrop").classList.remove("hidden");
+        }
+
+        function closeModal() {
+            $("modalBackdrop").classList.add("hidden");
+        }
+
+        function backdropClose(event) {
+            if (event.target === $("modalBackdrop")) {
+                closeModal();
+            }
+        }
+
+        function searchUI() {
+            openModal("Search conversations", `
+                <input id="searchInput" class="search-input" placeholder="Search titles and messages…" autocomplete="off">
+                <div id="searchResults"></div>
+            `);
+
+            const input = $("searchInput");
+            const renderResults = () => {
+                const query = input.value.trim().toLowerCase();
+                const matches = [];
+
+                if (!query) {
+                    $("searchResults").innerHTML = `<div class="result">Start typing to search your local conversation history.</div>`;
+                    return;
+                }
+
+                state.sessions.forEach((session) => {
+                    session.messages.forEach((message) => {
+                        const haystack = `${session.title} ${message.content}`.toLowerCase();
+                        if (haystack.includes(query)) {
+                            matches.push({ session, message });
+                        }
+                    });
+                });
+
+                $("searchResults").innerHTML = matches.length
+                    ? matches.slice(0, 40).map(({ session, message }) => `
+                        <div class="result" onclick="selectChatFromSearch('${session.id}')">
+                            <strong>${escapeHtml(session.title)}</strong>
+                            <div>${escapeHtml(message.content.slice(0, 220))}</div>
+                        </div>
+                    `).join("")
+                    : `<div class="result">No matching messages found.</div>`;
+            };
+
+            input.addEventListener("input", renderResults);
+            renderResults();
+            input.focus();
+        }
+
+        function selectChatFromSearch(id) {
+            closeModal();
+            selectChat(id);
+        }
+
+        async function saveItem(key, message) {
+            const items = (await dbGet(key)) || [];
+            const exists = items.some((item) => item.time === message.time && item.content === message.content);
+
+            if (!exists) {
+                items.push(message);
+                await dbPut(key, items);
+                showSystemMessage(`${key.slice(0, -1)} saved.`);
+            }
+        }
+
+        async function listSaved(key) {
+            const items = (await dbGet(key)) || [];
+
+            openModal(key, items.length
+                ? items.map((item) => `
+                    <div class="result">
+                        <strong>${escapeHtml(new Date(item.time).toLocaleString())}</strong>
+                        <div>${escapeHtml(item.content.slice(0, 900))}</div>
+                    </div>
+                `).join("")
+                : `<div class="result">Nothing saved yet.</div>`);
+        }
+
+        function prompts() {
+            const promptsList = [
+                "Explain this step by step with practical examples.",
+                "Review this code and identify bugs, risks and improvements.",
+                "Turn these notes into a polished professional document.",
+                "Design a clean, scalable architecture for this software project.",
+                "Analyze the provided information and summarize the most important insights.",
+                "Act as a senior software engineer and propose the best implementation approach."
+            ];
+
+            openModal("Prompt library", promptsList.map((prompt) => `
+                <div class="result" onclick="usePrompt('${escapeHtml(prompt).replace(/'/g, "\\'")}')">${escapeHtml(prompt)}</div>
+            `).join(""));
+        }
+
+        function usePrompt(prompt) {
+            closeModal();
+            quick(prompt);
+        }
+
+        function urlUI() {
+            openModal("URL context", `
+                <input id="urlInput" class="modal-input" placeholder="https://example.com" autocomplete="off">
+                <div class="modal-actions">
+                    <button type="button" onclick="useURL()">Fetch & attach</button>
+                </div>
+                <div id="urlStatus"></div>
+            `);
+            $("urlInput").focus();
+        }
+
+        async function useURL() {
+            const url = $("urlInput").value.trim();
+            if (!url) {
+                return;
+            }
+
+            $("urlStatus").innerHTML = `<div class="result">Fetching page…</div>`;
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const html = await response.text();
+                const documentFragment = new DOMParser().parseFromString(html, "text/html");
+                const text = (documentFragment.body?.innerText || html).slice(0, 20000);
+
+                state.files.push({
+                    name: `URL: ${url}`,
+                    type: "text/html",
+                    size: text.length,
+                    text
+                });
+
+                renderFiles();
+                closeModal();
+            } catch (error) {
+                $("urlStatus").innerHTML = `
+                    <div class="error-box">
+                        The browser blocked this URL or the page could not be fetched. This is commonly caused by CORS restrictions.
+                    </div>
+                `;
+            }
+        }
+
+        async function analytics() {
+            const totalMessages = state.sessions.reduce((sum, session) => sum + session.messages.length, 0);
+            const totalUser = state.sessions.reduce((sum, session) => sum + session.messages.filter((message) => message.role === "user").length, 0);
+            const totalAssistant = state.sessions.reduce((sum, session) => sum + session.messages.filter((message) => message.role === "assistant").length, 0);
+
+            openModal("Analytics", `
+                <div class="card">
+                    <div class="stat"><span>Conversations</span><strong>${state.sessions.length}</strong></div>
+                    <div class="stat"><span>Total messages</span><strong>${totalMessages}</strong></div>
+                    <div class="stat"><span>User messages</span><strong>${totalUser}</strong></div>
+                    <div class="stat"><span>AI responses</span><strong>${totalAssistant}</strong></div>
+                </div>
+            `);
+        }
+
+        function settings() {
+            openModal("Settings", `
+                <div class="card">
+                    <div class="stat"><span>Memory</span><strong>IndexedDB</strong></div>
+                    <div class="stat"><span>API</span><strong>Gemini OpenAI-compatible</strong></div>
+                    <div class="stat"><span>Storage</span><strong>Local browser</strong></div>
+                </div>
+                <button class="wide-button" type="button" onclick="theme(); closeModal();">◐ &nbsp; Toggle appearance</button>
+                <button class="wide-button" type="button" onclick="clearLocalMemory()">⌫ &nbsp; Clear all local memory</button>
+            `);
+        }
+
+        async function clearLocalMemory() {
+            if (!confirm("Clear all local conversations, favorites and bookmarks?")) {
+                return;
+            }
+
+            indexedDB.deleteDatabase(DATABASE_NAME);
+            location.reload();
+        }
+
+        function theme() {
+            document.body.classList.toggle("light");
+            localStorage.setItem("hashke-theme", document.body.classList.contains("light") ? "light" : "dark");
+        }
+
+        function restoreTheme() {
+            if (localStorage.getItem("hashke-theme") === "light") {
+                document.body.classList.add("light");
+            }
+        }
+
+        async function rename() {
+            const session = currentSession();
+            if (!session) {
+                return;
+            }
+
+            const name = prompt("Conversation name", session.title);
+            if (!name?.trim()) {
+                return;
+            }
+
+            session.title = name.trim().slice(0, 80);
+            await persist();
+            render();
+        }
+
+        function exportChat() {
+            const session = currentSession();
+            if (!session) {
+                return;
+            }
+
+            const markdown = [
+                `# ${session.title}`,
+                "",
+                ...session.messages.flatMap((message) => [
+                    `## ${message.role === "user" ? "You" : "Astra AI"}`,
+                    "",
+                    message.content,
+                    ""
+                ])
+            ].join("\n");
+
+            const blob = new Blob([markdown], { type: "text/markdown;charset=utf-8" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `${session.title.replace(/[^a-z0-9_-]+/gi, "_").slice(0, 60) || "astra_chat"}.md`;
+            link.click();
+            URL.revokeObjectURL(link.href);
+        }
+
+        async function clearCurrentChat() {
+            const session = currentSession();
+            if (!session || !session.messages.length) {
+                return;
+            }
+
+            if (!confirm("Clear all messages from this conversation?")) {
+                return;
+            }
+
+            session.messages = [];
+            await persist();
+            render();
+        }
+
+        async function regen() {
+            if (state.busy) {
+                return;
+            }
+
+            const session = currentSession();
+            if (!session || session.messages.length < 2) {
+                return;
+            }
+
+            const last = session.messages[session.messages.length - 1];
+            if (last.role !== "assistant") {
+                return;
+            }
+
+            session.messages.pop();
+            const userMessage = session.messages[session.messages.length - 1];
+            if (!userMessage || userMessage.role !== "user") {
+                await persist();
+                render();
+                return;
+            }
+
+            await persist();
+            render();
+            state.busy = true;
+            $("send").disabled = true;
+            addThinking();
+
+            try {
+                const answer = await askGemini(session.messages);
+                removeThinking();
+                session.messages.push({ role: "assistant", content: answer, time: Date.now() });
+                await persist();
+                render();
+            } catch (error) {
+                removeThinking();
+                session.messages.push({ role: "assistant", content: `I could not regenerate the answer. ${error.message}`, time: Date.now() });
+                await persist();
+                render();
+            } finally {
+                state.busy = false;
+                $("send").disabled = false;
+            }
+        }
+
+        document.addEventListener("keydown", (event) => {
+            if (!event.ctrlKey) {
+                return;
+            }
+
+            const key = event.key.toLowerCase();
+
+            if (key === "n") {
+                event.preventDefault();
+                newChat();
+            }
+
+            if (key === "f") {
+                event.preventDefault();
+                searchUI();
+            }
+        });
+
+        restoreTheme();
+        init();
+    </script>
+</body>
+</html>
