@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#07110d">
     <title>Hash&ke GPT Astra AI</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%236ee7b7'/%3E%3Cstop offset='.55' stop-color='%2310b981'/%3E%3Cstop offset='1' stop-color='%23047857'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='2' y='2' width='60' height='60' rx='16' fill='url(%23g)'/%3E%3Cpath d='M17 43c4-1 7-3 9-7l7-15c1-2 3-3 5-3h2c2 0 3 2 2 4l-5 11c-1 2 0 3 2 3h8c2 0 3 2 2 4-1 2-3 3-5 3H17Z' fill='%2302140d'/%3E%3Cpath d='M21 31c2-1 4-2 5-5l3-7c1-2 3-3 5-3h2c2 0 3 2 2 4l-3 7c-1 2 0 3 2 3h5c2 0 3 2 2 4-1 2-3 3-5 3H21Z' fill='%2302140d' opacity='.86'/%3E%3C/svg%3E">
     <style>
         :root {
             --bg: #050b08;
@@ -244,8 +245,10 @@
 
         .main {
             min-width: 0;
+            min-height: 0;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
 
         .topbar {
@@ -330,6 +333,17 @@
             margin: 0 auto 18px;
             border-radius: 24px;
             font-size: 30px;
+        }
+
+        .astra-mark {
+            width: 72%;
+            height: 72%;
+            display: block;
+        }
+
+        .logo .astra-mark {
+            width: 27px;
+            height: 27px;
         }
 
         .welcome h1 {
@@ -479,6 +493,7 @@
         }
 
         .composer-shell {
+            flex: 0 0 auto;
             padding: 11px 21px 17px;
             border-top: 1px solid var(--border);
         }
@@ -525,13 +540,15 @@
 
         .composer textarea {
             width: 100%;
+            height: 74px;
             min-height: 74px;
-            max-height: 200px;
+            max-height: 74px;
             display: block;
             padding: 15px 16px 10px;
             border: 0;
             outline: 0;
-            resize: vertical;
+            resize: none;
+            overflow-y: auto;
             color: var(--text);
             background: transparent;
             line-height: 1.55;
@@ -789,6 +806,168 @@
             background: var(--panel-3);
         }
 
+        .api-key-note {
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            color: var(--muted);
+            background: var(--bg-soft);
+            font-size: 10px;
+            line-height: 1.55;
+        }
+
+        .api-key-input {
+            width: 100%;
+            margin-top: 13px;
+            padding: 11px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            outline: none;
+            color: var(--text);
+            background: var(--bg-soft);
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            font-size: 11px;
+        }
+
+        .api-key-input:focus {
+            border-color: var(--border-strong);
+        }
+
+        .api-key-actions {
+            display: flex;
+            gap: 7px;
+            margin-top: 12px;
+        }
+
+        .api-key-actions button {
+            flex: 1;
+            padding: 9px 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--muted);
+            background: var(--panel-3);
+            cursor: pointer;
+        }
+
+        .api-key-actions .primary {
+            color: #02140d;
+            background: linear-gradient(135deg, #34d399, #059669);
+            border-color: #20c997;
+            font-weight: 900;
+        }
+
+        .api-key-panel {
+            display: grid;
+            gap: 7px;
+            margin: 0 0 8px;
+            padding: 9px;
+            border: 1px solid var(--border);
+            border-radius: 11px;
+            background: var(--panel-2);
+        }
+
+        .api-key-panel-label {
+            color: var(--muted-2);
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .api-key-panel input {
+            width: 100%;
+            min-width: 0;
+            padding: 9px 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            outline: none;
+            color: var(--text);
+            background: var(--bg-soft);
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            font-size: 10px;
+        }
+
+        .api-key-panel input:focus {
+            border-color: var(--border-strong);
+        }
+
+        .api-key-panel-label, .api-key-panel button, .api-key-connected, .api-key-top-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .ui-icon {
+            width: 13px;
+            height: 13px;
+            flex: 0 0 13px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .gemini-mark {
+            width: 18px;
+            height: 18px;
+            display: inline-grid;
+            place-items: center;
+            color: #02140d;
+            background: linear-gradient(145deg, #6ee7b7, #10b981 52%, #047857);
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 950;
+            box-shadow: 0 0 16px rgba(16,185,129,.16);
+        }
+
+        .api-key-panel-label {
+            font-weight: 850;
+            color: var(--text);
+            margin-bottom: 7px;
+        }
+
+        .api-key-panel-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+
+        .api-key-panel button {
+            min-width: 0;
+            padding: 8px 7px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--muted);
+            background: var(--panel-3);
+            font-size: 10px;
+            cursor: pointer;
+        }
+
+        .api-key-panel button.primary {
+            color: #02140d;
+            background: linear-gradient(135deg, #34d399, #059669);
+            border-color: #20c997;
+            font-weight: 900;
+        }
+
+        .api-key-panel .api-key-session-note {
+            color: var(--muted-2);
+            font-size: 8px;
+            line-height: 1.45;
+        }
+
+        .api-key-connected {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            gap: 7px;
+            color: var(--muted);
+            font-size: 9px;
+        }
+
+        .api-key-connected strong { color: var(--emerald-2); }
+
+        .status-ok { color: var(--emerald-2) !important; }
+
         .error-box {
             margin-top: 10px;
             padding: 10px;
@@ -858,7 +1037,7 @@
     <div class="app">
         <aside class="sidebar">
             <div class="brand">
-                <div class="logo">A</div>
+                <div class="logo"><svg class="astra-mark" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="astraG" x1="8" y1="38" x2="37" y2="7" gradientUnits="userSpaceOnUse"><stop stop-color="#a7f3d0"/><stop offset="0.45" stop-color="#34d399"/><stop offset="1" stop-color="#059669"/></linearGradient></defs><path d="M8 34.5c3.5-.7 6.2-2.7 8-6.1l5.2-9.9c.9-1.7 2.5-2.7 4.4-2.7h2.1c2 0 3.2 2.1 2.3 3.9l-2.5 5c-.9 1.7.4 3.9 2.3 3.9h6.2c2.1 0 3.3 2.4 2.1 4.2l-.8 1.2c-.9 1.3-2.4 2.1-4 2.1H8Z" fill="url(#astraG)"/><path d="M10.5 25.8c2.7-.6 4.8-2.2 6.1-4.8l3.8-7.2c.8-1.6 2.3-2.5 4.1-2.5h1.6c1.8 0 3 1.9 2.2 3.5l-2 4c-.8 1.6.3 3.5 2.2 3.5h4.2c1.8 0 3 2 2.1 3.5l-.3.5c-.8 1.5-2.3 2.4-4 2.4H10.5Z" fill="#0b2419" opacity=".92"/><path d="M14 18.1c2-.5 3.5-1.7 4.5-3.5l2.6-5c.7-1.4 2-2.2 3.6-2.2h1.2c1.6 0 2.6 1.7 1.9 3.1l-1.3 2.5c-.7 1.4.3 3.1 1.9 3.1h2.9c1.7 0 2.8 1.9 1.9 3.3l-.1.1c-.8 1.3-2.1 2.1-3.7 2.1H14Z" fill="#02140d" opacity=".78"/></svg></div>
                 <div>
                     <div class="brand-title">Hash&ke GPT <span>Astra AI</span></div>
                     <span class="brand-subtitle">Private AI Workspace</span>
@@ -875,6 +1054,23 @@
                 <button class="nav-button" type="button" onclick="analytics()">◒ &nbsp; Analytics</button>
                 <button class="nav-button" type="button" onclick="settings()">⚙ &nbsp; Settings</button>
             </nav>
+
+            <div class="section-label">Gemini</div>
+            <div class="api-key-panel">
+                <div class="api-key-panel-label"><span class="gemini-mark">✦</span><span>Gemini API Key</span></div>
+                <div id="apiKeyEntryWrap">
+                    <input id="apiKeySidebarInput" type="password" autocomplete="off" spellcheck="false" placeholder="Paste or type your key…">
+                    <div class="api-key-panel-actions" style="margin-top:6px;">
+                        <button type="button" onclick="connectSidebarKey()" class="primary"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5 10 17l9-10" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>Connect</button>
+                        <button type="button" onclick="openApiKeyUI()"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.8" fill="currentColor"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/><circle cx="19" cy="12" r="1.8" fill="currentColor"/></svg>More</button>
+                    </div>
+                </div>
+                <div class="api-key-connected" id="apiKeyConnected">
+                    <span><strong><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5 19 6v5.1c0 4.4-2.6 7.9-7 9.4-4.4-1.5-7-5-7-9.4V6l7-2.5Z" fill="currentColor" opacity=".2"/><path d="M8 12.2 10.7 15 16.4 9.3" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg> Connected</strong> · this tab only</span>
+                    <button type="button" onclick="clearGeminiKey()"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10m-9 0v11.5h8V7M9.5 7V4.8h5V7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Remove</button>
+                </div>
+                <div class="api-key-session-note">Used only in this browser tab. Never saved to browser storage or sent to your Vercel server.</div>
+            </div>
 
             <div class="section-label">Conversations</div>
             <div id="sessions" class="sessions"></div>
@@ -893,8 +1089,9 @@
                 </div>
 
                 <div class="top-actions">
+                    <button class="toolbar-button" id="apiKeyTopButton" type="button" onclick="openApiKeyUI()"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="8.2" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12.2 12h8m-3 0v3m-3-3v2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span class="api-key-top-label">API Key</span></button>
                     <select id="model" class="model-select" aria-label="AI model">
-                        <option value="">Loading models…</option>
+                        <option value="">Connect Gemini first</option>
                     </select>
                     <button class="icon-button" type="button" title="Refresh models" onclick="models()">↻</button>
                     <button class="icon-button" type="button" title="Toggle appearance" onclick="theme()">◐</button>
@@ -903,7 +1100,7 @@
 
             <section id="chat" class="chat">
                 <div id="welcome" class="welcome">
-                    <div class="hero-logo">A</div>
+                    <div class="hero-logo"><svg class="astra-mark" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="astraG" x1="8" y1="38" x2="37" y2="7" gradientUnits="userSpaceOnUse"><stop stop-color="#a7f3d0"/><stop offset="0.45" stop-color="#34d399"/><stop offset="1" stop-color="#059669"/></linearGradient></defs><path d="M8 34.5c3.5-.7 6.2-2.7 8-6.1l5.2-9.9c.9-1.7 2.5-2.7 4.4-2.7h2.1c2 0 3.2 2.1 2.3 3.9l-2.5 5c-.9 1.7.4 3.9 2.3 3.9h6.2c2.1 0 3.3 2.4 2.1 4.2l-.8 1.2c-.9 1.3-2.4 2.1-4 2.1H8Z" fill="url(#astraG)"/><path d="M10.5 25.8c2.7-.6 4.8-2.2 6.1-4.8l3.8-7.2c.8-1.6 2.3-2.5 4.1-2.5h1.6c1.8 0 3 1.9 2.2 3.5l-2 4c-.8 1.6.3 3.5 2.2 3.5h4.2c1.8 0 3 2 2.1 3.5l-.3.5c-.8 1.5-2.3 2.4-4 2.4H10.5Z" fill="#0b2419" opacity=".92"/><path d="M14 18.1c2-.5 3.5-1.7 4.5-3.5l2.6-5c.7-1.4 2-2.2 3.6-2.2h1.2c1.6 0 2.6 1.7 1.9 3.1l-1.3 2.5c-.7 1.4.3 3.1 1.9 3.1h2.9c1.7 0 2.8 1.9 1.9 3.3l-.1.1c-.8 1.3-2.1 2.1-3.7 2.1H14Z" fill="#02140d" opacity=".78"/></svg></div>
                     <h1>What can Astra help you build?</h1>
                     <p>
                         A polished AI workspace with persistent local memory, Gemini models,
@@ -991,7 +1188,10 @@
            All application JavaScript is intentionally kept in this file.
            ============================================================ */
 
-        const GEMINI_API_KEY = "AQ.Ab8RN6L8mJTShXj_iPCkKRIqgII8WrVUh6g1JUv9Ib1sw5hBhQ";
+        // BYOK mode: the user's Gemini key exists only in page memory.
+        // It is never written to localStorage, sessionStorage, IndexedDB, cookies,
+        // URL parameters, the Vercel server, or any application database.
+        let GEMINI_API_KEY = "";
         const GEMINI_API_BASE = "https://generativelanguage.googleapis.com/v1beta";
 
         const GEMINI_MODELS = [
@@ -1084,6 +1284,7 @@
 
         async function init() {
             try {
+                updateApiKeyStatus();
                 await openDatabase();
                 state.sessions = (await dbGet("sessions")) || [];
 
@@ -1104,6 +1305,13 @@
                 if (event.key === "Enter" && event.ctrlKey) {
                     event.preventDefault();
                     send();
+                }
+            });
+
+            $("apiKeySidebarInput")?.addEventListener("keydown", (event) => {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    connectSidebarKey();
                 }
             });
 
@@ -1254,8 +1462,93 @@
             });
         }
 
+        function updateApiKeyStatus() {
+            const entry = $("apiKeyEntryWrap");
+            const connected = $("apiKeyConnected");
+            const top = $("apiKeyTopButton");
+            const sidebarInput = $("apiKeySidebarInput");
+
+            if (entry) entry.style.display = GEMINI_API_KEY ? "none" : "block";
+            if (connected) connected.style.display = GEMINI_API_KEY ? "flex" : "none";
+            if (top) {
+                top.textContent = GEMINI_API_KEY ? "🔑 Connected" : "🔑 API Key";
+                top.classList.toggle("status-ok", Boolean(GEMINI_API_KEY));
+            }
+            if (!GEMINI_API_KEY && sidebarInput) sidebarInput.value = "";
+        }
+
+        async function connectSidebarKey() {
+            const value = $("apiKeySidebarInput")?.value.trim();
+            if (!value) {
+                $("apiKeySidebarInput")?.focus();
+                return;
+            }
+            GEMINI_API_KEY = value;
+            updateApiKeyStatus();
+            try {
+                await models();
+                $("input").focus();
+            } catch (error) {
+                clearGeminiKey();
+                showSystemMessage(`Gemini key could not be verified. ${error.message}`);
+            }
+        }
+
+        function clearGeminiKey() {
+            GEMINI_API_KEY = "";
+            updateApiKeyStatus();
+            const select = $("model");
+            select.innerHTML = '<option value="">Connect Gemini first</option>';
+            $("modelStat").textContent = "Not connected";
+            closeModal();
+        }
+
+        function openApiKeyUI() {
+            openModal("Gemini API Key", `
+                <input id="apiKeyInput" class="api-key-input" type="password" autocomplete="off" spellcheck="false" placeholder="AIza…">
+                <div class="api-key-note">
+                    Your key is used only for this browser session. Astra does not save it, send it to your Vercel server, or store it in browser storage. Closing or refreshing this tab removes it.
+                </div>
+                <div class="api-key-actions">
+                    <button type="button" onclick="clearGeminiKey()">Remove key</button>
+                    <button type="button" class="primary" onclick="connectGeminiKey()">Connect Gemini</button>
+                </div>
+            `);
+            const input = $("apiKeyInput");
+            input.value = GEMINI_API_KEY || $("apiKeySidebarInput")?.value || "";
+            setTimeout(() => input.focus(), 0);
+        }
+
+        async function connectGeminiKey() {
+            const value = $("apiKeyInput")?.value.trim();
+            if (!value) {
+                showSystemMessage("Enter your Gemini API key first.");
+                return;
+            }
+            GEMINI_API_KEY = value;
+            updateApiKeyStatus();
+            closeModal();
+            try {
+                await models();
+            } catch (error) {
+                clearGeminiKey();
+                showSystemMessage(`Gemini key could not be verified. ${error.message}`);
+                return;
+            }
+            $("input").focus();
+        }
+
+        function forgetKeyOnPageExit() {
+            GEMINI_API_KEY = "";
+        }
+
         async function send() {
             if (state.busy) {
+                return;
+            }
+
+            if (!GEMINI_API_KEY) {
+                openApiKeyUI();
                 return;
             }
 
@@ -1333,7 +1626,7 @@
 
         async function askGemini(messages) {
             if (!GEMINI_API_KEY) {
-                throw new Error("No Gemini API key is configured in index.html.");
+                throw new Error("Connect a Gemini API key for this session first.");
             }
 
             const model = $("model").value;
@@ -1364,16 +1657,22 @@
                 }
             };
 
-            const response = await fetch(
-                `${GEMINI_API_BASE}/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(GEMINI_API_KEY)}`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(payload)
-                }
-            );
+            let response;
+            try {
+                response = await fetch(
+                    `${GEMINI_API_BASE}/models/${encodeURIComponent(model)}:generateContent`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "x-goog-api-key": GEMINI_API_KEY
+                        },
+                        body: JSON.stringify(payload)
+                    }
+                );
+            } catch (error) {
+                throw new Error(`Could not reach Gemini. ${error.message}`);
+            }
 
             let data = null;
             try {
@@ -1414,14 +1713,21 @@
 
         async function models() {
             const select = $("model");
+
+            if (!GEMINI_API_KEY) {
+                select.innerHTML = '<option value="">Enter a Gemini API key…</option>';
+                $("modelStat").textContent = "Not connected";
+                return;
+            }
+
             select.innerHTML = "<option value=\"\">Loading Gemini models…</option>";
 
             try {
-                const response = await fetch(
-                    `${GEMINI_API_BASE}/models?key=${encodeURIComponent(GEMINI_API_KEY)}`
-                );
-
+                const response = await fetch(`${GEMINI_API_BASE}/models`, {
+                    headers: { "x-goog-api-key": GEMINI_API_KEY }
+                });
                 const data = await response.json();
+
                 if (!response.ok) {
                     throw new Error(data?.error?.message || `Gemini returned HTTP ${response.status}.`);
                 }
@@ -1435,23 +1741,22 @@
 
                 const resolved = GEMINI_MODELS.map((wanted) => {
                     const exact = available.find((item) => item.id === wanted.id);
-                    if (exact) {
-                        return { ...wanted, id: exact.id };
-                    }
+                    if (exact) return { ...wanted, id: exact.id };
 
                     const normalizedLabel = wanted.label.toLowerCase().replace(/[^a-z0-9]+/g, "");
                     const match = available.find((item) => {
                         const normalizedId = item.id.toLowerCase().replace(/[^a-z0-9]+/g, "");
                         return normalizedId.includes(normalizedLabel) || normalizedLabel.includes(normalizedId);
                     });
-
                     return match ? { ...wanted, id: match.id } : wanted;
                 });
 
-                renderGeminiModels(resolved);
+                const usable = resolved.filter((item) => available.some((remote) => remote.id === item.id));
+                renderGeminiModels(usable.length ? usable : resolved);
             } catch (error) {
                 renderGeminiModels(GEMINI_MODELS);
-                showSystemMessage(`Live Gemini model discovery failed: ${error.message}. The configured Gemini model list is available.`);
+                showSystemMessage(`Gemini model discovery failed: ${error.message}. The configured model list is available.`);
+                throw error;
             }
         }
 
@@ -1692,7 +1997,7 @@
             openModal("Settings", `
                 <div class="card">
                     <div class="stat"><span>Memory</span><strong>IndexedDB</strong></div>
-                    <div class="stat"><span>API</span><strong>Gemini OpenAI-compatible</strong></div>
+                    <div class="stat"><span>API</span><strong>Gemini · Vercel server</strong></div>
                     <div class="stat"><span>Storage</span><strong>Local browser</strong></div>
                 </div>
                 <button class="wide-button" type="button" onclick="theme(); closeModal();">◐ &nbsp; Toggle appearance</button>
@@ -1841,6 +2146,9 @@
         });
 
         restoreTheme();
+        window.addEventListener("pagehide", forgetKeyOnPageExit);
+        window.addEventListener("beforeunload", forgetKeyOnPageExit);
+        updateApiKeyStatus();
         init();
     </script>
 </body>
