@@ -1027,8 +1027,6 @@
 
         .attach-button input {
             position: absolute;
-            inset: 0;
-            opacity: 0;
             cursor: pointer;
         }
 
@@ -1258,6 +1256,166 @@
         .search-input:focus,
         .modal-input:focus {
             border-color: var(--border-strong);
+        }
+
+        .saved-item {
+            position: relative;
+            overflow: hidden;
+            padding: 13px 13px 12px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: linear-gradient(145deg, color-mix(in srgb, var(--panel-3) 78%, transparent), color-mix(in srgb, var(--bg-soft) 82%, transparent));
+            transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+        }
+
+        .saved-item:hover {
+            transform: translateY(-2px);
+            border-color: rgba(52, 211, 153, .34);
+            box-shadow: 0 14px 34px rgba(0,0,0,.14), 0 0 0 1px rgba(52,211,153,.04) inset;
+        }
+
+        .saved-item::before {
+            content: "";
+            position: absolute;
+            inset: 0 auto 0 0;
+            width: 2px;
+            background: linear-gradient(180deg, transparent, var(--emerald-2), transparent);
+            opacity: .45;
+            transform: scaleY(.45);
+            transition: transform 220ms ease, opacity 220ms ease;
+        }
+
+        .saved-item:hover::before {
+            opacity: .9;
+            transform: scaleY(1);
+        }
+
+        .saved-item-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .saved-item-time {
+            color: var(--text);
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .saved-item-remove {
+            flex: 0 0 auto;
+            display: inline-grid;
+            place-items: center;
+            width: 29px;
+            height: 29px;
+            padding: 0;
+            border: 1px solid rgba(148, 163, 184, .18);
+            border-radius: 9px;
+            color: var(--muted);
+            background: rgba(255,255,255,.025);
+            cursor: pointer;
+            font: inherit;
+            font-size: 15px;
+            line-height: 1;
+            transition: transform 160ms ease, color 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
+        }
+
+        .saved-item-remove:hover {
+            color: #fda4af;
+            border-color: rgba(251, 113, 133, .42);
+            background: rgba(251, 113, 133, .09);
+            transform: rotate(90deg) scale(1.06);
+            box-shadow: 0 6px 18px rgba(251,113,133,.12);
+        }
+
+        .saved-item-preview {
+            margin-top: 8px;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        .saved-item-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 11px;
+        }
+
+        .saved-item-actions button, .saved-clear-button {
+            appearance: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            min-height: 30px;
+            padding: 0 10px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            color: var(--muted);
+            background: color-mix(in srgb, var(--panel-2) 72%, transparent);
+            cursor: pointer;
+            font: inherit;
+            font-size: 10px;
+            transition: transform 160ms ease, color 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
+        }
+
+        .saved-item-actions button:hover, .saved-clear-button:hover {
+            color: var(--text);
+            border-color: rgba(52, 211, 153, .34);
+            background: rgba(52, 211, 153, .07);
+            transform: translateY(-1px);
+            box-shadow: 0 7px 18px rgba(16,185,129,.08);
+        }
+
+        .saved-clear-button {
+            color: #fda4af;
+            border-color: rgba(251, 113, 133, .20);
+        }
+
+        .saved-clear-button:hover {
+            color: #fecdd3;
+            border-color: rgba(251, 113, 133, .40);
+            background: rgba(251, 113, 133, .07);
+        }
+
+        .saved-toolbar {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .saved-toolbar .search-input { margin-top: 0; }
+
+        .voice-button.listening {
+            position: relative;
+            color: var(--emerald-2);
+            border-color: rgba(52, 211, 153, .50);
+            background: rgba(52, 211, 153, .09);
+            box-shadow: 0 0 0 3px rgba(52, 211, 153, .08), 0 8px 26px rgba(16,185,129,.10);
+            animation: voicePulse 1.6s ease-in-out infinite;
+        }
+
+        .voice-button.listening::before {
+            content: "";
+            width: 6px; height: 6px; border-radius: 50%;
+            background: currentColor;
+            box-shadow: 0 0 0 0 rgba(52,211,153,.45);
+            animation: voiceDot 1.25s infinite;
+        }
+
+        @keyframes voicePulse {
+            0%,100% { transform: translateY(0); }
+            50% { transform: translateY(-1px); }
+        }
+
+        @keyframes voiceDot {
+            70% { box-shadow: 0 0 0 7px rgba(52,211,153,0); }
+            100% { box-shadow: 0 0 0 0 rgba(52,211,153,0); }
         }
 
         .result {
@@ -3538,26 +3696,134 @@
         }
 
         let voiceRecognition = null;
-        function toggleVoice() {
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!SpeechRecognition) { toast("Voice input is not supported in this browser"); return; }
+        let voiceShouldContinue = false;
+        let voiceFinalText = "";
+        let voiceBaseText = "";
+        let voiceRestartTimer = null;
+
+        function setVoiceButton(listening) {
             const button = $("voiceButton");
-            if (voiceRecognition) { voiceRecognition.stop(); return; }
-            voiceRecognition = new SpeechRecognition();
-            voiceRecognition.lang = navigator.language || "en-US";
-            voiceRecognition.interimResults = true;
-            voiceRecognition.continuous = false;
-            let finalText = "";
-            voiceRecognition.onresult = (event) => {
-                finalText = Array.from(event.results).map((result) => result[0].transcript).join("");
-                $("input").value = finalText;
+            if (!button) return;
+            button.classList.toggle("listening", listening);
+            button.innerHTML = listening
+                ? '<span class="action-icon">■</span><span class="action-label">Stop voice</span>'
+                : '<span class="action-icon">🎙</span><span class="action-label">Voice</span>';
+            button.title = listening ? "Stop voice input" : "Start voice input";
+            button.setAttribute("aria-pressed", String(listening));
+        }
+
+        function stopVoiceInput(silent = false) {
+            voiceShouldContinue = false;
+            if (voiceRestartTimer) { clearTimeout(voiceRestartTimer); voiceRestartTimer = null; }
+            const recognition = voiceRecognition;
+            voiceRecognition = null;
+            try { recognition?.stop(); } catch {}
+            setVoiceButton(false);
+            if (voiceFinalText) {
+                $("input").value = voiceBaseText + voiceFinalText;
+                autoResizeComposer();
+                $("input").focus();
+            }
+            if (!silent) toast("Voice input stopped — review and send when ready");
+        }
+
+        function startVoiceRecognition(Recognition) {
+            if (!voiceShouldContinue) return;
+            const recognition = new Recognition();
+            voiceRecognition = recognition;
+            recognition.lang = navigator.language || "en-US";
+            recognition.interimResults = true;
+            recognition.continuous = true;
+            recognition.maxAlternatives = 1;
+
+            recognition.onstart = () => {
+                voiceRecognition = recognition;
+                setVoiceButton(true);
+            };
+
+            recognition.onresult = (event) => {
+                let committed = "";
+                let interim = "";
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    const transcript = event.results[i]?.[0]?.transcript || "";
+                    if (event.results[i].isFinal) committed += transcript;
+                    else interim += transcript;
+                }
+                if (committed) voiceFinalText += committed;
+                $("input").value = voiceBaseText + voiceFinalText + interim;
                 autoResizeComposer();
             };
-            voiceRecognition.onstart = () => { button?.classList.add("listening"); button.textContent = "🎙 Listening…"; };
-            voiceRecognition.onend = () => { voiceRecognition = null; button?.classList.remove("listening"); button.textContent = "🎙 Voice"; if (finalText) $("input").focus(); };
-            voiceRecognition.onerror = () => { voiceRecognition = null; button?.classList.remove("listening"); button.textContent = "🎙 Voice"; toast("Voice input stopped"); };
-            voiceRecognition.start();
+
+            recognition.onerror = (event) => {
+                const code = event?.error || "unknown";
+                if (code === "aborted") return;
+                if (code === "not-allowed" || code === "service-not-allowed") {
+                    voiceShouldContinue = false;
+                    voiceRecognition = null;
+                    setVoiceButton(false);
+                    toast("Microphone access is blocked. Allow the microphone for this site and try again.");
+                    return;
+                }
+                if (code === "audio-capture") {
+                    voiceShouldContinue = false;
+                    voiceRecognition = null;
+                    setVoiceButton(false);
+                    toast("No microphone was detected. Check your Windows/browser microphone settings.");
+                    return;
+                }
+                if (code === "network") {
+                    voiceShouldContinue = false;
+                    voiceRecognition = null;
+                    setVoiceButton(false);
+                    toast("Voice recognition needs a network connection in this browser.");
+                    return;
+                }
+                if (code === "no-speech") return;
+                toast(`Voice input: ${code}`);
+            };
+
+            recognition.onend = () => {
+                if (voiceRecognition !== recognition) return;
+                voiceRecognition = null;
+                if (voiceShouldContinue) {
+                    voiceRestartTimer = setTimeout(() => startVoiceRecognition(Recognition), 180);
+                } else {
+                    setVoiceButton(false);
+                }
+            };
+
+            try {
+                recognition.start();
+            } catch (error) {
+                voiceRecognition = null;
+                if (voiceShouldContinue) {
+                    voiceRestartTimer = setTimeout(() => startVoiceRecognition(Recognition), 300);
+                } else {
+                    setVoiceButton(false);
+                }
+            }
         }
+
+        async function toggleVoice() {
+            const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!Recognition) {
+                toast("Voice input isn't available in this browser. Use Chrome or Edge and allow microphone access.");
+                return;
+            }
+            if (voiceShouldContinue || voiceRecognition) {
+                stopVoiceInput(false);
+                return;
+            }
+
+            if (voiceRestartTimer) { clearTimeout(voiceRestartTimer); voiceRestartTimer = null; }
+            voiceShouldContinue = true;
+            voiceFinalText = "";
+            voiceBaseText = $("input")?.value ? `${$("input").value.trim()}${$("input").value.trim() ? " " : ""}` : "";
+            setVoiceButton(true);
+            startVoiceRecognition(Recognition);
+            toast("Listening… speak naturally, then press Stop voice");
+        }
+
 
         async function editAndResend(time) {
             if (state.busy) return;
@@ -3760,25 +4026,29 @@
         async function listSaved(key) {
             const items = (await dbGet(key)) || [];
             const sorted = [...items].sort((a, b) => (b.savedAt || b.time || 0) - (a.savedAt || a.time || 0));
-            const cards = sorted.map((item, index) => `
-                <div class="result" data-saved-index="${index}">
-                    <div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start;">
-                        <strong>${escapeHtml(new Date(item.time).toLocaleString())}</strong>
-                        <button type="button" onclick="removeSavedItem('${key}', ${index})" aria-label="Remove saved item">×</button>
+            const cards = sorted.map((item, index) => {
+                const safeContent = String(item.content || "");
+                const sessionId = String(item.sessionId || state.currentId || "");
+                return `
+                    <div class="saved-item result" data-saved-index="${index}">
+                        <div class="saved-item-head">
+                            <div class="saved-item-time">${escapeHtml(new Date(item.time).toLocaleString())}</div>
+                            <button type="button" class="saved-item-remove" onclick="removeSavedItem('${key}', ${index})" aria-label="Remove saved item" title="Remove">×</button>
+                        </div>
+                        <div class="saved-item-preview">${escapeHtml(safeContent.slice(0, 900))}${safeContent.length > 900 ? "…" : ""}</div>
+                        <div class="saved-item-actions">
+                            <button type="button" onclick="copyText(${JSON.stringify(safeContent)})"><span>⧉</span> Copy</button>
+                            <button type="button" onclick="downloadTextFile(${JSON.stringify(safeContent)}, 'astra-saved.txt')"><span>↓</span> Download</button>
+                            <button type="button" onclick="closeModal(); selectChat(${JSON.stringify(sessionId)})"><span>↗</span> Open chat</button>
+                        </div>
                     </div>
-                    <div>${escapeHtml((item.content || "").slice(0, 900))}</div>
-                    <div class="modal-actions">
-                        <button type="button" onclick="copyText(${JSON.stringify(item.content || "")})">Copy</button>
-                        <button type="button" onclick="downloadTextFile(${JSON.stringify(item.content || "")}, 'astra-saved.txt')">Download</button>
-                        <button type="button" onclick="closeModal(); selectChat('${escapeHtml(item.sessionId || state.currentId)}')">Open</button>
-                    </div>
-                </div>
-            `).join("");
+                `;
+            }).join("");
 
             openModal(key, `
-                <div class="modal-actions" style="justify-content:space-between;">
+                <div class="saved-toolbar">
                     <input id="savedSearch" class="search-input" placeholder="Search saved items…" autocomplete="off">
-                    <button type="button" onclick="clearSaved('${key}')">Clear all</button>
+                    <button type="button" class="saved-clear-button" onclick="clearSaved('${key}')">Clear all</button>
                 </div>
                 <div id="savedResults">${cards || `<div class="result">Nothing saved yet.</div>`}</div>
             `);
@@ -3786,7 +4056,7 @@
             const search = $("savedSearch");
             search?.addEventListener("input", () => {
                 const q = search.value.trim().toLowerCase();
-                document.querySelectorAll("#savedResults .result").forEach((el) => {
+                document.querySelectorAll("#savedResults .saved-item").forEach((el) => {
                     el.style.display = !q || el.textContent.toLowerCase().includes(q) ? "block" : "none";
                 });
             });
