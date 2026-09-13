@@ -315,10 +315,12 @@
 
         .chat {
             min-height: 0;
-            flex: 1;
+            flex: 1 1 auto;
             overflow-y: auto;
-            padding: 30px 5vw 24px;
+            overflow-x: hidden;
+            padding: 30px 5vw 34px;
             scroll-behavior: smooth;
+            overscroll-behavior: contain;
         }
 
         .welcome {
@@ -382,7 +384,9 @@
         }
 
         .messages {
+            width: 100%;
             max-width: 920px;
+            min-width: 0;
             margin: 0 auto;
             display: grid;
             gap: 18px;
@@ -419,6 +423,7 @@
         }
 
         .bubble-wrap {
+            width: 100%;
             min-width: 0;
             max-width: calc(100% - 43px);
         }
@@ -495,9 +500,12 @@
         }
 
         .markdown-body pre {
+            width: 100%;
+            max-width: 100%;
             margin: 10px 0;
             padding: 12px;
             overflow-x: auto;
+            overflow-y: hidden;
             border: 1px solid var(--border);
             border-radius: 10px;
             background: var(--bg-soft);
@@ -1136,23 +1144,6 @@
                 <button class="nav-button" type="button" onclick="settings()">⚙ &nbsp; Settings</button>
             </nav>
 
-            <div class="section-label">Gemini</div>
-            <div class="api-key-panel">
-                <div class="api-key-panel-label"><span class="gemini-mark">✦</span><span>Gemini API Key</span></div>
-                <div id="apiKeyEntryWrap">
-                    <input id="apiKeySidebarInput" type="password" autocomplete="off" spellcheck="false" placeholder="Paste or type your key…">
-                    <div class="api-key-panel-actions" style="margin-top:6px;">
-                        <button type="button" onclick="connectSidebarKey()" class="primary"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5 10 17l9-10" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>Connect</button>
-                        <button type="button" onclick="openApiKeyUI()"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.8" fill="currentColor"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/><circle cx="19" cy="12" r="1.8" fill="currentColor"/></svg>More</button>
-                    </div>
-                </div>
-                <div class="api-key-connected" id="apiKeyConnected">
-                    <span><strong><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5 19 6v5.1c0 4.4-2.6 7.9-7 9.4-4.4-1.5-7-5-7-9.4V6l7-2.5Z" fill="currentColor" opacity=".2"/><path d="M8 12.2 10.7 15 16.4 9.3" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg> Connected</strong> · this tab only</span>
-                    <button type="button" onclick="clearGeminiKey()"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10m-9 0v11.5h8V7M9.5 7V4.8h5V7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Remove</button>
-                </div>
-                <div class="api-key-session-note">Used only in this browser tab. Never saved to browser storage or sent to your Vercel server.</div>
-            </div>
-
             <div class="section-label">Conversations</div>
             <div id="sessions" class="sessions"></div>
 
@@ -1170,9 +1161,8 @@
                 </div>
 
                 <div class="top-actions">
-                    <button class="toolbar-button" id="apiKeyTopButton" type="button" onclick="openApiKeyUI()"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="8.2" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12.2 12h8m-3 0v3m-3-3v2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span class="api-key-top-label">API Key</span></button>
                     <select id="model" class="model-select" aria-label="AI model">
-                        <option value="">Connect Gemini first</option>
+                        <option value="">Loading Gemini models…</option>
                     </select>
                     <button class="icon-button" type="button" title="Refresh models" onclick="models()">↻</button>
                     <button class="icon-button" type="button" title="Toggle appearance" onclick="theme()">◐</button>
@@ -1269,11 +1259,8 @@
            All application JavaScript is intentionally kept in this file.
            ============================================================ */
 
-        // BYOK mode: the user's Gemini key exists only in page memory.
-        // It is never written to localStorage, sessionStorage, IndexedDB, cookies,
-        // URL parameters, the Vercel server, or any application database.
-        let GEMINI_API_KEY = "";
-        const GEMINI_API_BASE = "https://generativelanguage.googleapis.com/v1beta";
+        // Gemini is called through Vercel server functions. The API key never enters browser code.
+        const GEMINI_PROXY_BASE = "/api";
 
         const GEMINI_MODELS = [
             { label: "Gemini 3 Flash", id: "gemini-3-flash" },
@@ -1386,13 +1373,6 @@
                 if (event.key === "Enter" && event.ctrlKey) {
                     event.preventDefault();
                     send();
-                }
-            });
-
-            $("apiKeySidebarInput")?.addEventListener("keydown", (event) => {
-                if (event.key === "Enter") {
-                    event.preventDefault();
-                    connectSidebarKey();
                 }
             });
 
@@ -1680,92 +1660,12 @@
         }
 
         function updateApiKeyStatus() {
-            const entry = $("apiKeyEntryWrap");
-            const connected = $("apiKeyConnected");
             const top = $("apiKeyTopButton");
-            const sidebarInput = $("apiKeySidebarInput");
-
-            if (entry) entry.style.display = GEMINI_API_KEY ? "none" : "block";
-            if (connected) connected.style.display = GEMINI_API_KEY ? "flex" : "none";
-            if (top) {
-                top.textContent = GEMINI_API_KEY ? "🔑 Connected" : "🔑 API Key";
-                top.classList.toggle("status-ok", Boolean(GEMINI_API_KEY));
-            }
-            if (!GEMINI_API_KEY && sidebarInput) sidebarInput.value = "";
-        }
-
-        async function connectSidebarKey() {
-            const value = $("apiKeySidebarInput")?.value.trim();
-            if (!value) {
-                $("apiKeySidebarInput")?.focus();
-                return;
-            }
-            GEMINI_API_KEY = value;
-            updateApiKeyStatus();
-            try {
-                await models();
-                $("input").focus();
-            } catch (error) {
-                clearGeminiKey();
-                showSystemMessage(`Gemini key could not be verified. ${error.message}`);
-            }
-        }
-
-        function clearGeminiKey() {
-            GEMINI_API_KEY = "";
-            updateApiKeyStatus();
-            const select = $("model");
-            select.innerHTML = '<option value="">Connect Gemini first</option>';
-            $("modelStat").textContent = "Not connected";
-            closeModal();
-        }
-
-        function openApiKeyUI() {
-            openModal("Gemini API Key", `
-                <input id="apiKeyInput" class="api-key-input" type="password" autocomplete="off" spellcheck="false" placeholder="AIza…">
-                <div class="api-key-note">
-                    Your key is used only for this browser session. Astra does not save it, send it to your Vercel server, or store it in browser storage. Closing or refreshing this tab removes it.
-                </div>
-                <div class="api-key-actions">
-                    <button type="button" onclick="clearGeminiKey()">Remove key</button>
-                    <button type="button" class="primary" onclick="connectGeminiKey()">Connect Gemini</button>
-                </div>
-            `);
-            const input = $("apiKeyInput");
-            input.value = GEMINI_API_KEY || $("apiKeySidebarInput")?.value || "";
-            setTimeout(() => input.focus(), 0);
-        }
-
-        async function connectGeminiKey() {
-            const value = $("apiKeyInput")?.value.trim();
-            if (!value) {
-                showSystemMessage("Enter your Gemini API key first.");
-                return;
-            }
-            GEMINI_API_KEY = value;
-            updateApiKeyStatus();
-            closeModal();
-            try {
-                await models();
-            } catch (error) {
-                clearGeminiKey();
-                showSystemMessage(`Gemini key could not be verified. ${error.message}`);
-                return;
-            }
-            $("input").focus();
-        }
-
-        function forgetKeyOnPageExit() {
-            GEMINI_API_KEY = "";
+            if (top) top.style.display = "none";
         }
 
         async function send() {
             if (state.busy) {
-                return;
-            }
-
-            if (!GEMINI_API_KEY) {
-                openApiKeyUI();
                 return;
             }
 
@@ -1779,61 +1679,85 @@
                 return;
             }
 
-            let content = text || "Please analyze the attached files.";
-
-            if (state.files.length) {
-                content += "\n\n[Attached files]\n";
-                content += state.files
-                    .map((file) => {
-                        const body = file.text ? `\n${file.text.slice(0, 14000)}` : "\n[Binary attachment: content extraction is not available in this browser-only build.]";
-                        return `• ${file.name}${body}`;
-                    })
-                    .join("\n");
-            }
-
-            const userMessage = {
-                role: "user",
-                content,
-                time: Date.now()
-            };
-
-            session.messages.push(userMessage);
-
-            if (session.title === "New conversation") {
-                session.title = (text || "File analysis").slice(0, 54);
-            }
-
-            $("input").value = "";
-            state.files = [];
-            renderFiles();
             state.busy = true;
             $("send").disabled = true;
 
-            await persist();
-            render();
-            addThinking();
-
             try {
-                const answer = await askGemini(session.messages);
-                removeThinking();
+                /*
+                 * V1 attachment handling:
+                 * Send the original attachment bytes to Gemini as inline_data.
+                 * There is NO browser-side OCR, text extraction, truncation, or
+                 * conversion of uploaded files. Gemini receives the file itself.
+                 */
+                const attachments = await Promise.all(
+                    state.files.map(async (file) => {
+                        if (file.source instanceof Blob) {
+                            return {
+                                name: file.name,
+                                type: file.type || "application/octet-stream",
+                                size: file.size,
+                                data: await blobToBase64(file.source)
+                            };
+                        }
 
-                session.messages.push({
-                    role: "assistant",
-                    content: answer,
+                        // URL attachments are still text context because they are
+                        // created by the existing URL feature rather than a file upload.
+                        return {
+                            name: file.name,
+                            type: file.type || "text/plain",
+                            size: file.size || 0,
+                            text: file.text || ""
+                        };
+                    })
+                );
+
+                const userMessage = {
+                    role: "user",
+                    content: text || "Please analyze the attached files.",
+                    attachments,
                     time: Date.now()
-                });
+                };
+
+                session.messages.push(userMessage);
+
+                if (session.title === "New conversation") {
+                    session.title = (text || "File analysis").slice(0, 54);
+                }
+
+                $("input").value = "";
+                state.files = [];
+                renderFiles();
 
                 await persist();
                 render();
+                addThinking();
+
+                try {
+                    const answer = await askGemini(session.messages);
+                    removeThinking();
+
+                    session.messages.push({
+                        role: "assistant",
+                        content: answer,
+                        time: Date.now()
+                    });
+
+                    await persist();
+                    render();
+                    scrollToBottom();
+                } catch (error) {
+                    removeThinking();
+                    session.messages.push({
+                        role: "assistant",
+                        content: `I could not complete that request. ${error.message}`,
+                        time: Date.now()
+                    });
+                    await persist();
+                    render();
+                    scrollToBottom();
+                }
             } catch (error) {
-                removeThinking();
-                session.messages.push({
-                    role: "assistant",
-                    content: `I could not complete that request. ${error.message}`,
-                    time: Date.now()
-                });
-                await persist();
-                render();
+                showSystemMessage(`Attachment preparation failed. ${error.message}`);
             } finally {
                 state.busy = false;
                 $("send").disabled = false;
@@ -1841,11 +1765,22 @@
             }
         }
 
-        async function askGemini(messages) {
-            if (!GEMINI_API_KEY) {
-                throw new Error("Connect a Gemini API key for this session first.");
-            }
+        function blobToBase64(blob) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
 
+                reader.onload = () => {
+                    const result = String(reader.result || "");
+                    const comma = result.indexOf(",");
+                    resolve(comma >= 0 ? result.slice(comma + 1) : result);
+                };
+
+                reader.onerror = () => reject(reader.error || new Error("Could not read the attachment."));
+                reader.readAsDataURL(blob);
+            });
+        }
+
+        async function askGemini(messages) {
             const model = $("model").value;
             if (!model) {
                 throw new Error("No Gemini model is selected.");
@@ -1860,35 +1795,57 @@
             const contents = messages
                 .slice(-20)
                 .filter((message) => message.role === "user" || message.role === "assistant")
-                .map((message) => ({
-                    role: message.role === "assistant" ? "model" : "user",
-                    parts: [{ text: message.content || "" }]
-                }));
+                .map((message) => {
+                    const parts = [];
+
+                    if (message.content) {
+                        parts.push({ text: message.content });
+                    }
+
+                    /*
+                     * Attach the ORIGINAL uploaded bytes. Gemini gets the actual
+                     * image/document/media instead of a parsed text approximation.
+                     */
+                    if (message.role === "user" && Array.isArray(message.attachments)) {
+                        message.attachments.forEach((attachment) => {
+                            if (attachment.data) {
+                                parts.push({
+                                    inline_data: {
+                                        mime_type: attachment.type || "application/octet-stream",
+                                        data: attachment.data
+                                    }
+                                });
+                            } else if (attachment.text) {
+                                parts.push({
+                                    text: `URL context (${attachment.name}):\n${attachment.text}`
+                                });
+                            }
+                        });
+                    }
+
+                    return {
+                        role: message.role === "assistant" ? "model" : "user",
+                        parts: parts.length ? parts : [{ text: "" }]
+                    };
+                });
 
             const payload = {
                 systemInstruction,
                 contents,
                 generationConfig: {
-                    temperature: Number($("temp").value),
-                    maxOutputTokens: 4096
+                    temperature: Number($("temp").value)
                 }
             };
 
             let response;
             try {
-                response = await fetch(
-                    `${GEMINI_API_BASE}/models/${encodeURIComponent(model)}:generateContent`,
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "x-goog-api-key": GEMINI_API_KEY
-                        },
-                        body: JSON.stringify(payload)
-                    }
-                );
+                response = await fetch(`${GEMINI_PROXY_BASE}/chat`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ model, ...payload })
+                });
             } catch (error) {
-                throw new Error(`Could not reach Gemini. ${error.message}`);
+                throw new Error(`Could not reach Astra server. ${error.message}`);
             }
 
             let data = null;
@@ -1931,18 +1888,10 @@
         async function models() {
             const select = $("model");
 
-            if (!GEMINI_API_KEY) {
-                select.innerHTML = '<option value="">Enter a Gemini API key…</option>';
-                $("modelStat").textContent = "Not connected";
-                return;
-            }
-
             select.innerHTML = "<option value=\"\">Loading Gemini models…</option>";
 
             try {
-                const response = await fetch(`${GEMINI_API_BASE}/models`, {
-                    headers: { "x-goog-api-key": GEMINI_API_KEY }
-                });
+                const response = await fetch(`${GEMINI_PROXY_BASE}/models`);
                 const data = await response.json();
 
                 if (!response.ok) {
@@ -1986,22 +1935,17 @@
                     continue;
                 }
 
-                let text = "";
-                const textLike = /\.(txt|md|py|js|css|html|json|csv|xml|log|sql|yaml|yml|ts|tsx|jsx|java|c|cpp|h|hpp|sh|bat)$/i.test(file.name) || file.type.startsWith("text/");
-
-                if (textLike) {
-                    try {
-                        text = await file.text();
-                    } catch {
-                        text = "";
-                    }
-                }
-
+                /*
+                 * Keep the File object untouched. Do NOT call file.text(), OCR,
+                 * PDF parsing, image parsing, or any other client-side extraction.
+                 * The original bytes are converted to base64 only immediately
+                 * before the Gemini request so Gemini can inspect the attachment.
+                 */
                 state.files.push({
                     name: file.name,
-                    type: file.type,
+                    type: file.type || "application/octet-stream",
                     size: file.size,
-                    text
+                    source: file
                 });
             }
 
@@ -2333,6 +2277,7 @@
                 session.messages.push({ role: "assistant", content: answer, time: Date.now() });
                 await persist();
                 render();
+                scrollToBottom();
             } catch (error) {
                 removeThinking();
                 session.messages.push({ role: "assistant", content: `I could not regenerate the answer. ${error.message}`, time: Date.now() });
@@ -2363,8 +2308,6 @@
         });
 
         restoreTheme();
-        window.addEventListener("pagehide", forgetKeyOnPageExit);
-        window.addEventListener("beforeunload", forgetKeyOnPageExit);
         updateApiKeyStatus();
         init();
     </script>
