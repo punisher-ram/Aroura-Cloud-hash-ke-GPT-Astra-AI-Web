@@ -967,6 +967,35 @@
             font-size: 9px;
         }
 
+        .creator-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            margin-top: 10px;
+            padding: 6px 9px;
+            border: 1px solid rgba(52, 211, 153, 0.16);
+            border-radius: 999px;
+            color: var(--muted);
+            background: rgba(52, 211, 153, 0.045);
+            text-decoration: none;
+            font-size: 9px;
+            font-weight: 750;
+            letter-spacing: 0.01em;
+            transition: 160ms ease;
+        }
+
+        .creator-link:hover {
+            color: var(--emerald-2);
+            border-color: rgba(52, 211, 153, 0.34);
+            background: rgba(52, 211, 153, 0.09);
+            transform: translateY(-1px);
+        }
+
+        .creator-link .creator-spark {
+            font-size: 11px;
+            opacity: 0.9;
+        }
+
         .shortcut {
             display: flex;
             justify-content: space-between;
@@ -1080,6 +1109,71 @@
             color: var(--muted);
             background: var(--panel-3);
         }
+
+        .astra-dialog-copy {
+            padding: 10px 0 2px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.55;
+        }
+
+        .astra-dialog-input {
+            width: 100%;
+            margin-top: 12px;
+            padding: 12px 13px;
+            border: 1px solid var(--border);
+            border-radius: 11px;
+            outline: none;
+            color: var(--text);
+            background: var(--bg-soft);
+            font: inherit;
+            box-sizing: border-box;
+        }
+
+        .astra-dialog-input:focus {
+            border-color: var(--emerald-2);
+            box-shadow: 0 0 0 3px rgba(52, 211, 153, .10);
+        }
+
+        .astra-dialog-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .astra-dialog-actions button {
+            min-width: 82px;
+            padding: 9px 14px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            background: var(--panel-3);
+            cursor: pointer;
+            font: inherit;
+            font-size: 11px;
+            transition: 150ms ease;
+        }
+
+        .astra-dialog-actions button:hover {
+            transform: translateY(-1px);
+            border-color: var(--border-strong);
+        }
+
+        .astra-dialog-actions .primary {
+            border-color: rgba(52, 211, 153, .38);
+            color: #062318;
+            background: linear-gradient(135deg, var(--emerald-2), var(--emerald-3));
+            font-weight: 800;
+        }
+
+        .astra-dialog-actions .danger {
+            border-color: rgba(248, 113, 113, .32);
+            color: #fecaca;
+        }
+
+        body.light .astra-dialog-actions .primary { color: #06351f; }
+        body.light .astra-dialog-actions .danger { color: #991b1b; }
 
         .api-key-note {
             margin-top: 10px;
@@ -1802,6 +1896,9 @@
                 <div class="card-title">Signature</div>
                 <div class="signature">BY HASH</div>
                 <div class="signature-sub">Hash&ke GPT Astra AI</div>
+                <a class="creator-link" href="https://harshith.blog" target="_blank" rel="noopener noreferrer" aria-label="Visit harshith.blog">
+                    <span class="creator-spark">✦</span> harshith.blog <span aria-hidden="true">↗</span>
+                </a>
             </div>
 
             <div class="card">
@@ -2814,7 +2911,7 @@
             const index = session.messages.findIndex((m) => m.time === time && m.role === "user");
             if (index < 0) return;
             const message = session.messages[index];
-            const edited = prompt("Edit your message", message.content || "");
+            const edited = await askInput("Edit message", "Edit your message below. You can change it before sending again.", message.content || "");
             if (edited === null || !edited.trim()) return;
             session.messages = session.messages.slice(0, index);
             state.files = [];
@@ -2852,6 +2949,47 @@
             input.style.height = `${Math.min(input.scrollHeight, 170)}px`;
         }
 
+        function askInput(title, description, value = "") {
+            return new Promise((resolve) => {
+                const id = `dialog-${makeId()}`;
+                openModal(title, `
+                    <div class="astra-dialog-copy">${escapeHtml(description)}</div>
+                    <input id="${id}" class="astra-dialog-input" value="${escapeHtml(value)}" maxlength="80" autocomplete="off">
+                    <div class="astra-dialog-actions">
+                        <button type="button" onclick="resolveDialog(null)">Cancel</button>
+                        <button type="button" class="primary" onclick="resolveDialog(document.getElementById('${id}').value)">Save</button>
+                    </div>
+                `);
+                window.__astraDialogResolve = resolve;
+                const input = document.getElementById(id);
+                requestAnimationFrame(() => { input?.focus(); input?.select(); });
+                input?.addEventListener("keydown", (event) => {
+                    if (event.key === "Enter") { event.preventDefault(); resolveDialog(input.value); }
+                    if (event.key === "Escape") { event.preventDefault(); resolveDialog(null); }
+                });
+            });
+        }
+
+        function askConfirm(title, description, confirmLabel = "Confirm", danger = false) {
+            return new Promise((resolve) => {
+                openModal(title, `
+                    <div class="astra-dialog-copy">${escapeHtml(description)}</div>
+                    <div class="astra-dialog-actions">
+                        <button type="button" onclick="resolveDialog(false)">Cancel</button>
+                        <button type="button" class="${danger ? "danger" : "primary"}" onclick="resolveDialog(true)">${escapeHtml(confirmLabel)}</button>
+                    </div>
+                `);
+                window.__astraDialogResolve = resolve;
+            });
+        }
+
+        function resolveDialog(value) {
+            const resolve = window.__astraDialogResolve;
+            window.__astraDialogResolve = null;
+            closeModal();
+            if (resolve) resolve(value);
+        }
+
         function openModal(title, html) {
             $("modalTitle").textContent = title;
             $("modalBody").innerHTML = html;
@@ -2860,6 +2998,11 @@
 
         function closeModal() {
             $("modalBackdrop").classList.add("hidden");
+            const resolve = window.__astraDialogResolve;
+            if (resolve) {
+                window.__astraDialogResolve = null;
+                resolve(null);
+            }
         }
 
         function backdropClose(event) {
@@ -2979,7 +3122,7 @@
         async function clearSaved(key) {
             const items = (await dbGet(key)) || [];
             if (!items.length) return;
-            if (!confirm(`Clear all ${key.toLowerCase()}?`)) return;
+            if (!await askConfirm(`Clear ${key.toLowerCase()}`, `This will permanently remove all ${key.toLowerCase()} from this browser.`, "Clear all", true)) return;
             await dbPut(key, []);
             toast(`${key} cleared`);
             updateSavedNavCounts();
@@ -3101,7 +3244,7 @@
         }
 
         async function clearLocalMemory() {
-            if (!confirm("Clear all local conversations, favorites and bookmarks?")) {
+            if (!await askConfirm("Clear local memory", "This will remove all conversations, favorites and bookmarks stored in this browser. This cannot be undone.", "Clear everything", true)) {
                 return;
             }
 
@@ -3126,7 +3269,7 @@
                 return;
             }
 
-            const name = prompt("Conversation name", session.title);
+            const name = await askInput("Rename conversation", "Choose a name for this conversation.", session.title);
             if (!name?.trim()) {
                 return;
             }
@@ -3167,7 +3310,7 @@
                 return;
             }
 
-            if (!confirm("Clear all messages from this conversation?")) {
+            if (!await askConfirm("Clear conversation", "All messages in this conversation will be removed. The conversation itself will stay.", "Clear messages", true)) {
                 return;
             }
 
