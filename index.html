@@ -1027,7 +1027,15 @@
 
         .attach-button input {
             position: absolute;
-            cursor: pointer;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .attach-button:focus-within {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(32, 201, 151, .12);
         }
 
         .send-button {
