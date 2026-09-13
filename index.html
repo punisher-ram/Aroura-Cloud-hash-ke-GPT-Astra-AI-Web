@@ -612,6 +612,39 @@
         }
 
         .message-actions {
+            flex-wrap: wrap;
+        }
+
+        .voice-button.listening {
+            border-color: var(--emerald-2);
+            color: var(--emerald-2);
+            box-shadow: 0 0 0 3px rgba(52, 211, 153, .10);
+        }
+
+        .session-row {
+            display: flex;
+            gap: 4px;
+            align-items: stretch;
+        }
+
+        .session-row .session-button { flex: 1; min-width: 0; }
+        .session-mini-action {
+            width: 30px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--panel-2);
+            color: var(--muted-2);
+            cursor: pointer;
+        }
+        .session-mini-action:hover { color: var(--emerald-2); border-color: var(--border-strong); }
+
+        .custom-instruction {
+            width: 100%; min-height: 110px; resize: vertical;
+            padding: 10px; border: 1px solid var(--border); border-radius: 9px;
+            background: var(--panel-2); color: var(--text); outline: none;
+            font: inherit; line-height: 1.5;
+        }
+
             display: flex;
             gap: 5px;
             margin-top: 7px;
@@ -631,222 +664,107 @@
             border-color: var(--border-strong);
         }
 
-        .image-mode-button.active {
-            color: #062b1c;
-            background: linear-gradient(135deg, #a7f3d0, #34d399);
-            border-color: rgba(16, 185, 129, .55);
-            box-shadow: 0 0 0 3px rgba(52, 211, 153, .10);
-        }
-
-        .image-gallery {
+        .generated-files {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 10px;
+            gap: 8px;
             margin-top: 12px;
         }
 
-        .generated-image-card {
-            position: relative;
-            overflow: hidden;
+        .generated-image-card,
+        .generated-file-card {
             border: 1px solid var(--border);
             border-radius: 14px;
-            background: #071b13;
+            padding: 9px;
+            background: var(--panel-3);
+            overflow: hidden;
         }
 
         .generated-image-card img {
             display: block;
             width: 100%;
-            height: auto;
+            max-width: 720px;
             max-height: 620px;
             object-fit: contain;
-            background: #071b13;
+            border-radius: 10px;
+            background: #000;
         }
 
-        .generated-image-tools {
-            display: flex;
-            gap: 6px;
-            padding: 7px;
-            border-top: 1px solid var(--border);
-            background: rgba(4, 18, 12, .88);
-        }
-
-        .saved-item {
-            display: grid;
-            grid-template-columns: 1fr auto auto;
-            gap: 7px;
-            margin-bottom: 10px;
-        }
-
-        .saved-search {
-            width: 100%;
-            min-width: 0;
-            padding: 9px 10px;
-            border: 1px solid var(--border);
-            border-radius: 9px;
-            outline: none;
-            color: var(--text);
-            background: var(--panel-3);
-        }
-
-        .saved-search:focus {
-            border-color: var(--border-strong);
-            box-shadow: 0 0 0 3px rgba(52, 211, 153, .08);
-        }
-
-        .saved-select,
-        .saved-toolbar button {
-            min-height: 35px;
-            padding: 7px 9px;
-            border: 1px solid var(--border);
-            border-radius: 9px;
-            color: var(--muted);
-            background: var(--panel-2);
-            font-size: 9px;
-        }
-
-        .saved-toolbar button:hover,
-        .saved-select:hover {
-            color: var(--emerald-2);
-            border-color: var(--border-strong);
-        }
-
-        .saved-count {
-            margin: 0 0 8px;
-            color: var(--muted-2);
-            font-size: 9px;
-        }
-
-        .saved-item {
-            margin-bottom: 8px;
-            padding: 10px;
-            border: 1px solid var(--border);
-            border-radius: 11px;
-            background: var(--panel-3);
-        }
-
-        .saved-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .saved-item-head {
+        .generated-file-head {
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 10px;
-            margin-bottom: 5px;
-        }
-
-        .saved-remove-top {
-            width: 28px;
-            height: 28px;
-            flex: 0 0 auto;
-            display: grid;
-            place-items: center;
-            padding: 0 !important;
-            border: 1px solid var(--border) !important;
-            border-radius: 8px !important;
-            color: var(--muted-2);
-            background: transparent;
-            font-size: 16px !important;
-            line-height: 1;
-            cursor: pointer;
-        }
-
-        .saved-remove-top:hover {
-            color: var(--danger) !important;
-            border-color: var(--danger) !important;
-            background: rgba(239, 68, 68, .08);
-        }
-
-        .saved-item-date {
+            font-size: 11px;
             color: var(--text);
+        }
+
+        .generated-file-meta {
+            margin-top: 3px;
+            color: var(--muted-2);
             font-size: 9px;
-            font-weight: 800;
         }
 
-        .saved-item-preview {
-            max-height: 132px;
-            overflow: auto;
-            color: var(--muted);
-            font-size: 10px;
-            line-height: 1.55;
-            white-space: pre-wrap;
-            overflow-wrap: anywhere;
-        }
-
-        .saved-item-actions {
+        .generated-file-actions {
             display: flex;
             flex-wrap: wrap;
-            gap: 5px;
+            gap: 6px;
             margin-top: 8px;
         }
 
-        .saved-item-actions button {
-            padding: 5px 7px;
+        .generated-file-actions button,
+        .generated-file-actions a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 9px;
             border: 1px solid var(--border);
-            border-radius: 7px;
-            color: var(--muted-2);
-            background: transparent;
+            border-radius: 8px;
+            color: var(--muted);
+            background: var(--panel-2);
             font-size: 9px;
+            text-decoration: none;
+            cursor: pointer;
         }
 
-        .saved-item-actions button:hover {
+        .generated-file-actions button:hover,
+        .generated-file-actions a:hover {
             color: var(--emerald-2);
             border-color: var(--border-strong);
         }
 
-        .saved-item-actions .danger:hover {
-            color: var(--danger);
-            border-color: var(--danger);
+        .image-mode-button.active {
+            color: var(--emerald-2);
+            border-color: var(--emerald);
+            box-shadow: 0 0 0 2px rgba(16,185,129,.12);
         }
 
-        @media (max-width: 720px) {
-            .image-mode-button.active {
-            color: #062b1c;
-            background: linear-gradient(135deg, #a7f3d0, #34d399);
-            border-color: rgba(16, 185, 129, .55);
-            box-shadow: 0 0 0 3px rgba(52, 211, 153, .10);
+        .stop-button {
+            background: linear-gradient(135deg, #7f1d1d, #991b1b) !important;
+            border-color: #b91c1c !important;
+            color: #fff !important;
         }
 
-        .image-gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 10px;
-            margin-top: 12px;
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 24px;
+            z-index: 100;
+            transform: translate(-50%, 18px);
+            opacity: 0;
+            pointer-events: none;
+            padding: 9px 13px;
+            border: 1px solid var(--border-strong);
+            border-radius: 10px;
+            color: var(--text);
+            background: var(--panel-3);
+            box-shadow: 0 16px 40px var(--shadow);
+            font-size: 10px;
+            transition: 180ms ease;
         }
 
-        .generated-image-card {
-            position: relative;
-            overflow: hidden;
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            background: #071b13;
-        }
-
-        .generated-image-card img {
-            display: block;
-            width: 100%;
-            height: auto;
-            max-height: 620px;
-            object-fit: contain;
-            background: #071b13;
-        }
-
-        .generated-image-tools {
-            display: flex;
-            gap: 6px;
-            padding: 7px;
-            border-top: 1px solid var(--border);
-            background: rgba(4, 18, 12, .88);
-        }
-
-        .saved-item {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .saved-search {
-                grid-column: 1 / -1;
-            }
+        .toast.visible {
+            opacity: 1;
+            transform: translate(-50%, 0);
         }
 
         .composer-shell {
@@ -1783,8 +1701,8 @@
             <nav class="nav" aria-label="Workspace navigation">
                 <button class="nav-button active" type="button">⌂ &nbsp; Chat</button>
                 <button class="nav-button" type="button" onclick="searchUI()">⌕ &nbsp; Search conversations</button>
-                <button id="favoritesNav" class="nav-button" type="button" onclick="listSaved('Favorites')">★ &nbsp; Favorites</button>
-                <button id="bookmarksNav" class="nav-button" type="button" onclick="listSaved('Bookmarks')">🔖 &nbsp; Bookmarks</button>
+                <button class="nav-button" type="button" onclick="listSaved('Favorites')">★ &nbsp; Favorites</button>
+                <button class="nav-button" type="button" onclick="listSaved('Bookmarks')">🔖 &nbsp; Bookmarks</button>
                 <button class="nav-button" type="button" onclick="analytics()">◒ &nbsp; Analytics</button>
                 <button class="nav-button" type="button" onclick="settings()">⚙ &nbsp; Settings</button>
             </nav>
@@ -1845,8 +1763,9 @@
                             <input id="file" type="file" multiple>
                         </label>
                         <button class="toolbar-button" type="button" onclick="prompts()">Prompts</button>
-                        <button id="imageMode" class="toolbar-button image-mode-button" type="button" onclick="toggleImageMode()" title="Generate an image with a Gemini image model">Image</button>
+                        <button class="toolbar-button voice-button" id="voiceButton" type="button" onclick="toggleVoice()" title="Voice input">🎙 Voice</button>
                         <button class="toolbar-button" type="button" onclick="urlUI()">URL</button>
+                        <button id="imageMode" class="toolbar-button image-mode-button" type="button" onclick="toggleImageMode()" title="Generate an image with a Gemini image model">Image</button>
                         <select id="temp" class="toolbar-button toolbar-select" aria-label="Response style">
                             <option value="0.2">Precise</option>
                             <option value="0.5" selected>Balanced</option>
@@ -1871,7 +1790,10 @@
             <div class="card">
                 <div class="card-title">Quick controls</div>
                 <button class="wide-button" type="button" onclick="regen()">↻ &nbsp; Regenerate last answer</button>
+                <button class="wide-button" type="button" onclick="copyChat()">⧉ &nbsp; Copy conversation</button>
                 <button class="wide-button" type="button" onclick="exportChat()">⇩ &nbsp; Export conversation</button>
+                <button class="wide-button" type="button" onclick="exportChatHTML()">▣ &nbsp; Export as HTML</button>
+                <button class="wide-button" type="button" onclick="duplicateChat()">＋ &nbsp; Duplicate conversation</button>
                 <button class="wide-button" type="button" onclick="rename()">✎ &nbsp; Rename conversation</button>
                 <button class="wide-button" type="button" onclick="clearCurrentChat()">⌫ &nbsp; Clear messages</button>
             </div>
@@ -1890,6 +1812,8 @@
             </div>
         </aside>
     </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
     <div id="modalBackdrop" class="modal-backdrop hidden" onclick="backdropClose(event)">
         <div class="modal" role="dialog" aria-modal="true">
@@ -1918,17 +1842,19 @@
             { label: "Gemini 3.6 Flash", id: "gemini-3.6-flash" },
             { label: "Gemini 3.7 Flash", id: "gemini-3.7-flash" },
             { label: "Gemini 3.8 Flash", id: "gemini-3.8-flash" },
-            { label: "Gemini 3.1 Flash Image", id: "gemini-3.1-flash-image" },
-            { label: "Gemma 4 31B", id: "gemma-4-31b-it" }
+            { label: "Gemma 4 31B", id: "gemma-4-31b-it" },
+            { label: "Gemini 3.1 Flash Image", id: "gemini-3.1-flash-image", image: true }
         ];
-        const DATABASE_NAME = "hashke_astra_ai_v3";
+        const DATABASE_NAME = "hashke_astra_ai_v5";
 
         const state = {
             db: null,
             sessions: [],
             currentId: null,
             files: [],
-            busy: false
+            busy: false,
+            abortController: null,
+            imageMode: false
         };
 
         const $ = (id) => document.getElementById(id);
@@ -2012,8 +1938,8 @@
                     render();
                 }
 
-                await updateSavedNavCounts();
                 await models();
+                await updateSavedNavCounts();
             } catch (error) {
                 console.error(error);
                 showSystemMessage(`Local memory could not be initialized: ${error.message}`);
@@ -2028,7 +1954,7 @@
 
             $("file").addEventListener("change", handleFiles);
             $("model").addEventListener("change", () => {
-                $("modelStat").textContent = $("model").value || "—";
+                $("modelStat").textContent = $("model").selectedOptions?.[0]?.textContent || $("model").value || "—";
             });
         }
 
@@ -2057,11 +1983,14 @@
             $("sessions").innerHTML = state.sessions
                 .slice(0, 40)
                 .map((item) => `
-                    <button class="session-button ${item.id === state.currentId ? "active" : ""}"
-                            type="button"
-                            onclick="selectChat('${item.id}')">
-                        ${escapeHtml(item.title)}
-                    </button>
+                    <div class="session-row">
+                        <button class="session-button ${item.id === state.currentId ? "active" : ""}"
+                                type="button"
+                                onclick="selectChat('${item.id}')">
+                            ${item.pinned ? "📌 " : ""}${escapeHtml(item.title)}
+                        </button>
+                        <button class="session-mini-action" type="button" title="${item.pinned ? "Unpin" : "Pin"} conversation" onclick="togglePin('${item.id}')">${item.pinned ? "★" : "☆"}</button>
+                    </div>
                 `)
                 .join("");
 
@@ -2292,43 +2221,66 @@
             bubble.innerHTML = renderMarkdown(message.content || "");
             wireCodeCopyButtons(bubble);
 
+            wrapper.append(meta, bubble);
+
             if (Array.isArray(message.images) && message.images.length) {
                 const gallery = document.createElement("div");
-                gallery.className = "image-gallery";
+                gallery.className = "generated-files";
 
-                message.images.forEach((image, index) => {
-                    if (!image?.data) return;
-
+                message.images.forEach((file, index) => {
+                    if (!file?.data) return;
+                    const mimeType = file.mimeType || "image/png";
+                    const extension = extensionFromMime(mimeType);
+                    const filename = file.name || `astra-image-${index + 1}.${extension}`;
+                    const dataUrl = `data:${mimeType};base64,${file.data}`;
                     const card = document.createElement("div");
-                    card.className = "generated-image-card";
+                    card.className = mimeType.startsWith("image/") ? "generated-image-card" : "generated-file-card";
 
-                    const img = document.createElement("img");
-                    img.src = `data:${image.mimeType || "image/png"};base64,${image.data}`;
-                    img.alt = `Astra generated image ${index + 1}`;
-                    img.loading = "lazy";
+                    if (mimeType.startsWith("image/")) {
+                        const image = document.createElement("img");
+                        image.src = dataUrl;
+                        image.alt = filename;
+                        image.loading = "lazy";
+                        card.appendChild(image);
+                    }
 
-                    const tools = document.createElement("div");
-                    tools.className = "generated-image-tools";
+                    const head = document.createElement("div");
+                    head.className = "generated-file-head";
+                    head.innerHTML = `<strong>${escapeHtml(filename)}</strong><span>${escapeHtml(formatBytes(file.data.length * 0.75))}</span>`;
+                    card.appendChild(head);
 
-                    const openButton = document.createElement("button");
-                    openButton.type = "button";
-                    openButton.textContent = "Open";
-                    openButton.onclick = () => window.open(img.src, "_blank", "noopener,noreferrer");
+                    const actions = document.createElement("div");
+                    actions.className = "generated-file-actions";
 
-                    const saveButton = document.createElement("button");
-                    saveButton.type = "button";
-                    saveButton.textContent = "Download";
-                    saveButton.onclick = () => downloadGeneratedImage(image, index);
+                    const open = document.createElement("a");
+                    open.href = dataUrl;
+                    open.target = "_blank";
+                    open.rel = "noopener noreferrer";
+                    open.textContent = "Open";
 
-                    tools.append(openButton, saveButton);
-                    card.append(img, tools);
+                    const download = document.createElement("a");
+                    download.href = dataUrl;
+                    download.download = filename;
+                    download.textContent = "Download";
+
+                    actions.append(open, download);
+                    card.appendChild(actions);
                     gallery.appendChild(card);
                 });
 
-                if (gallery.children.length) bubble.appendChild(gallery);
+                wrapper.appendChild(gallery);
             }
 
-            wrapper.append(meta, bubble);
+            if (message.role === "user" && !message.ephemeral) {
+                const actions = document.createElement("div");
+                actions.className = "message-actions";
+                const editButton = document.createElement("button");
+                editButton.type = "button";
+                editButton.textContent = "Edit & resend";
+                editButton.onclick = () => editAndResend(message.time);
+                actions.appendChild(editButton);
+                wrapper.appendChild(actions);
+            }
 
             if (message.role === "assistant" && !message.ephemeral) {
                 const actions = document.createElement("div");
@@ -2337,7 +2289,17 @@
                 const copyButton = document.createElement("button");
                 copyButton.type = "button";
                 copyButton.textContent = "Copy";
-                copyButton.onclick = () => copyText(message.content);
+                copyButton.onclick = async () => { await copyText(message.content || ""); toast("Response copied"); };
+
+                const speakButton = document.createElement("button");
+                speakButton.type = "button";
+                speakButton.textContent = "Read aloud";
+                speakButton.onclick = () => speakText(message.content || "");
+
+                const downloadButton = document.createElement("button");
+                downloadButton.type = "button";
+                downloadButton.textContent = "Download .txt";
+                downloadButton.onclick = () => downloadTextFile(message.content || "", `astra-response-${Date.now()}.txt`);
 
                 const bookmarkButton = document.createElement("button");
                 bookmarkButton.type = "button";
@@ -2349,20 +2311,12 @@
                 favoriteButton.textContent = "Favorite";
                 favoriteButton.onclick = () => toggleSaved("Favorites", message);
 
-                const downloadButton = document.createElement("button");
-                downloadButton.type = "button";
-                downloadButton.textContent = "Download";
-                downloadButton.onclick = () => downloadResponse(message.content || "");
+                const regenButton = document.createElement("button");
+                regenButton.type = "button";
+                regenButton.textContent = "Regenerate";
+                regenButton.onclick = () => regen();
 
-                actions.append(copyButton, bookmarkButton, favoriteButton, downloadButton);
-
-                if (Array.isArray(message.images) && message.images.length) {
-                    const imageDownloadButton = document.createElement("button");
-                    imageDownloadButton.type = "button";
-                    imageDownloadButton.textContent = "Download images";
-                    imageDownloadButton.onclick = () => message.images.forEach((image, index) => downloadGeneratedImage(image, index));
-                    actions.appendChild(imageDownloadButton);
-                }
+                actions.append(copyButton, speakButton, downloadButton, bookmarkButton, favoriteButton, regenButton);
                 wrapper.appendChild(actions);
             }
 
@@ -2422,38 +2376,21 @@
 
         async function send() {
             if (state.busy) {
+                stopGeneration();
                 return;
             }
 
             const text = $("input").value.trim();
-            if (!text && !state.files.length) {
-                return;
-            }
+            if (!text && !state.files.length) return;
 
             const session = currentSession();
-            if (!session) {
-                return;
-            }
+            if (!session) return;
 
             state.busy = true;
-            $("send").disabled = true;
+            state.abortController = new AbortController();
+            setBusyUI(true);
 
             try {
-                if ($("imageMode")?.classList.contains("active")) {
-                    const imageOption = Array.from($("model").options).find((option) => /image/i.test(option.value));
-                    if (!imageOption) {
-                        throw new Error("No Gemini image model is available for this API project. Refresh the model list and try again.");
-                    }
-                    $("model").value = imageOption.value;
-                    $("modelStat").textContent = $("model").options[$("model").selectedIndex]?.text || "—";
-                }
-
-                /*
-                 * V1 attachment handling:
-                 * Send the original attachment bytes to Gemini as inline_data.
-                 * There is NO browser-side OCR, text extraction, truncation, or
-                 * conversion of uploaded files. Gemini receives the file itself.
-                 */
                 const attachments = await Promise.all(
                     state.files.map(async (file) => {
                         if (file.source instanceof Blob) {
@@ -2464,9 +2401,6 @@
                                 data: await blobToBase64(file.source)
                             };
                         }
-
-                        // URL attachments are still text context because they are
-                        // created by the existing URL feature rather than a file upload.
                         return {
                             name: file.name,
                             type: file.type || "text/plain",
@@ -2484,51 +2418,62 @@
                 };
 
                 session.messages.push(userMessage);
-
-                if (session.title === "New conversation") {
-                    session.title = (text || "File analysis").slice(0, 54);
-                }
+                if (session.title === "New conversation") session.title = (text || "File analysis").slice(0, 54);
 
                 $("input").value = "";
                 state.files = [];
                 renderFiles();
-
                 await persist();
                 render();
                 addThinking();
 
-                try {
-                    const answer = await askGemini(session.messages);
-                    removeThinking();
+                const answer = await askGemini(session.messages);
+                removeThinking();
+                session.messages.push({
+                    role: "assistant",
+                    content: answer.text || "",
+                    images: answer.images || [],
+                    sessionId: session.id,
+                    time: Date.now()
+                });
 
-                    session.messages.push({
-                        role: "assistant",
-                        content: answer.text || "",
-                        images: answer.images || [],
-                        time: Date.now()
-                    });
-
-                    await persist();
-                    render();
-                    scrollToBottom();
-                } catch (error) {
-                    removeThinking();
+                await persist();
+                render();
+                scrollToBottom();
+            } catch (error) {
+                removeThinking();
+                if (error?.name === "AbortError") {
+                    showSystemMessage("Generation stopped.");
+                } else {
                     session.messages.push({
                         role: "assistant",
                         content: `I could not complete that request. ${error.message}`,
+                        images: [],
                         time: Date.now()
                     });
                     await persist();
                     render();
                     scrollToBottom();
                 }
-            } catch (error) {
-                showSystemMessage(`Attachment preparation failed. ${error.message}`);
             } finally {
                 state.busy = false;
-                $("send").disabled = false;
+                state.abortController = null;
+                setBusyUI(false);
                 $("input").focus();
             }
+        }
+
+        function setBusyUI(busy) {
+            const button = $("send");
+            if (!button) return;
+            button.disabled = false;
+            button.textContent = busy ? "Stop ■" : "Send ↵";
+            button.classList.toggle("stop-button", busy);
+            button.title = busy ? "Stop generation" : "Send message";
+        }
+
+        function stopGeneration() {
+            state.abortController?.abort();
         }
 
         function blobToBase64(blob) {
@@ -2547,109 +2492,129 @@
         }
 
         async function askGemini(messages) {
-            const model = $("model").value;
-            if (!model) {
-                throw new Error("No Gemini model is selected.");
+            let model = $("model").value;
+            if (!model) throw new Error("No Gemini model is selected.");
+
+            const selectedOption = $("model").selectedOptions?.[0];
+            const isImageModel = /image/i.test(model) || /image/i.test(selectedOption?.textContent || "");
+            if (state.imageMode && !isImageModel) {
+                const imageOption = Array.from($("model").options).find((option) => /image/i.test(option.value) || /image/i.test(option.textContent));
+                if (!imageOption) throw new Error("No image-capable Gemini model is available for this project.");
+                model = imageOption.value;
+                $("model").value = model;
+                $("modelStat").textContent = imageOption.textContent;
             }
 
+            const customInstructions = localStorage.getItem("hashke-astra-instructions")?.trim() || "";
             const systemInstruction = {
-                parts: [{
-                    text: "You are Astra AI inside Hash&ke GPT Astra AI. Be accurate, practical, concise when appropriate, and transparent about uncertainty. Never invent facts. If the supplied context is insufficient, say so. You can help with general questions, analysis, planning, coding, software engineering and creative work. Respond naturally in your own voice. Preserve useful Markdown formatting such as bold, headings, lists, links and code blocks when it improves readability. Use emojis naturally when appropriate; never replace or remove them."
-                }]
+                parts: [{ text: "You are Astra AI inside Hash&ke GPT Astra AI. Be accurate, practical, concise when appropriate, and transparent about uncertainty. Never invent facts. If the supplied context is insufficient, say so. You can help with general questions, analysis, planning, coding, software engineering and creative work. Respond naturally in your own voice. Preserve useful Markdown formatting such as bold, headings, lists, links and code blocks when it improves readability. Use emojis naturally when appropriate; never replace or remove them." + (customInstructions ? `\n\nUser's custom instructions:\n${customInstructions}` : "") }]
             };
 
-            const contents = messages
-                .slice(-20)
+            const contents = messages.slice(-20)
                 .filter((message) => message.role === "user" || message.role === "assistant")
                 .map((message) => {
                     const parts = [];
-
-                    if (message.content) {
-                        parts.push({ text: message.content });
-                    }
-
-                    /*
-                     * Attach the ORIGINAL uploaded bytes. Gemini gets the actual
-                     * image/document/media instead of a parsed text approximation.
-                     */
+                    if (message.content) parts.push({ text: message.content });
                     if (message.role === "user" && Array.isArray(message.attachments)) {
                         message.attachments.forEach((attachment) => {
                             if (attachment.data) {
-                                parts.push({
-                                    inline_data: {
-                                        mime_type: attachment.type || "application/octet-stream",
-                                        data: attachment.data
-                                    }
-                                });
+                                parts.push({ inline_data: { mime_type: attachment.type || "application/octet-stream", data: attachment.data } });
                             } else if (attachment.text) {
-                                parts.push({
-                                    text: `URL context (${attachment.name}):\n${attachment.text}`
-                                });
+                                parts.push({ text: `URL context (${attachment.name}):\n${attachment.text}` });
                             }
                         });
                     }
-
-                    return {
-                        role: message.role === "assistant" ? "model" : "user",
-                        parts: parts.length ? parts : [{ text: "" }]
-                    };
+                    return { role: message.role === "assistant" ? "model" : "user", parts: parts.length ? parts : [{ text: "" }] };
                 });
 
-            const imageRequested = /image/i.test(model) || $("imageMode")?.classList.contains("active");
-            const payload = {
-                systemInstruction,
-                contents,
-                generationConfig: {
-                    temperature: Number($("temp").value)
-                }
-            };
+            const generationConfig = { temperature: Number($("temp").value) };
+            if (state.imageMode || isImageModel) generationConfig.responseModalities = ["TEXT", "IMAGE"];
 
-            if (imageRequested) {
-                payload.generationConfig.responseModalities = ["TEXT", "IMAGE"];
-            }
-
+            const payload = { systemInstruction, contents, generationConfig };
             let response;
             try {
                 response = await fetch(`${GEMINI_PROXY_BASE}/chat`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ model, ...payload })
+                    body: JSON.stringify({ model, ...payload }),
+                    signal: state.abortController?.signal
                 });
             } catch (error) {
+                if (error?.name === "AbortError") throw error;
                 throw new Error(`Could not reach Astra server. ${error.message}`);
             }
 
             let data = null;
-            try {
-                data = await response.json();
-            } catch {
-                throw new Error(`Gemini returned HTTP ${response.status}.`);
-            }
+            try { data = await response.json(); }
+            catch { throw new Error(`Gemini returned HTTP ${response.status}.`); }
 
-            if (!response.ok) {
-                throw new Error(data?.error?.message || `Gemini returned HTTP ${response.status}.`);
-            }
+            if (!response.ok) throw new Error(data?.error?.message || `Gemini returned HTTP ${response.status}.`);
 
             const parts = data?.candidates?.[0]?.content?.parts || [];
-            const answer = parts
-                .map((part) => part.text || "")
-                .join("")
-                .trim();
-
+            const text = parts.map((part) => part.text || "").join("").trim();
             const images = parts
                 .map((part) => part.inlineData || part.inline_data || null)
-                .filter((image) => image?.data)
-                .map((image) => ({
-                    mimeType: image.mimeType || image.mime_type || "image/png",
-                    data: image.data
+                .filter((file) => file?.data)
+                .map((file, index) => ({
+                    name: file.name || `astra-output-${Date.now()}-${index + 1}.${extensionFromMime(file.mimeType || file.mime_type || "image/png")}`,
+                    mimeType: file.mimeType || file.mime_type || "image/png",
+                    data: file.data
                 }));
 
-            if (!answer && !images.length) {
+            if (!text && !images.length) {
                 const reason = data?.candidates?.[0]?.finishReason;
-                throw new Error(reason ? `Gemini returned no output (finish reason: ${reason}).` : "Gemini returned no assistant output.");
+                throw new Error(reason ? `Gemini returned no content (finish reason: ${reason}).` : "Gemini returned no assistant message.");
             }
 
-            return { text: answer, images };
+            return { text, images };
+        }
+
+        function extensionFromMime(mime) {
+            const map = {
+                "image/png": "png", "image/jpeg": "jpg", "image/webp": "webp", "image/gif": "gif",
+                "application/pdf": "pdf", "text/plain": "txt", "text/html": "html", "text/csv": "csv",
+                "application/json": "json", "application/zip": "zip"
+            };
+            return map[mime] || (mime.split("/")[1] || "bin").replace(/[^a-z0-9]+/gi, "").slice(0, 8) || "bin";
+        }
+
+        function formatBytes(bytes) {
+            if (!Number.isFinite(bytes) || bytes <= 0) return "file";
+            const units = ["B", "KB", "MB", "GB"];
+            let value = bytes;
+            let unit = 0;
+            while (value >= 1024 && unit < units.length - 1) { value /= 1024; unit++; }
+            return `${value.toFixed(value >= 10 || unit === 0 ? 0 : 1)} ${units[unit]}`;
+        }
+
+        function downloadTextFile(text, filename) {
+            const blob = new Blob([String(text || "")], { type: "text/plain;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = filename || "astra-response.txt";
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+            toast("File downloaded");
+        }
+
+        function toast(message) {
+            const element = $("toast");
+            if (!element) return;
+            element.textContent = message;
+            element.classList.add("visible");
+            clearTimeout(window.__astraToastTimer);
+            window.__astraToastTimer = setTimeout(() => element.classList.remove("visible"), 1600);
+        }
+
+        function toggleImageMode() {
+            state.imageMode = !state.imageMode;
+            const button = $("imageMode");
+            button?.classList.toggle("active", state.imageMode);
+            if (button) button.textContent = state.imageMode ? "Image ✓" : "Image";
+            toast(state.imageMode ? "Image generation enabled" : "Image generation disabled");
         }
 
         function renderGeminiModels(models) {
@@ -2767,6 +2732,99 @@
             }
         }
 
+        function togglePin(id) {
+            const session = state.sessions.find((item) => item.id === id);
+            if (!session) return;
+            session.pinned = !session.pinned;
+            state.sessions.sort((a, b) => Number(Boolean(b.pinned)) - Number(Boolean(a.pinned)) || (b.created || 0) - (a.created || 0));
+            persist();
+            render();
+            toast(session.pinned ? "Conversation pinned" : "Conversation unpinned");
+        }
+
+        async function duplicateChat() {
+            const session = currentSession();
+            if (!session) return;
+            const copy = JSON.parse(JSON.stringify(session));
+            copy.id = makeId();
+            copy.title = `${session.title} (Copy)`;
+            copy.created = Date.now();
+            copy.pinned = false;
+            state.sessions.unshift(copy);
+            state.currentId = copy.id;
+            await persist();
+            render();
+            toast("Conversation duplicated");
+        }
+
+        async function copyChat() {
+            const session = currentSession();
+            if (!session) return;
+            const text = session.messages.map((m) => `${m.role === "user" ? "You" : "Astra AI"}:\n${m.content || ""}`).join("\n\n");
+            await copyText(text);
+            toast("Conversation copied");
+        }
+
+        function exportChatHTML() {
+            const session = currentSession();
+            if (!session) return;
+            const body = session.messages.map((m) => `<article><h2>${m.role === "user" ? "You" : "Astra AI"}</h2><div>${renderMarkdown(m.content || "")}</div></article>`).join("\n");
+            const html = `<!doctype html><html><head><meta charset="utf-8"><title>${escapeHtml(session.title)}</title><style>body{font:16px system-ui;max-width:900px;margin:40px auto;padding:0 20px;background:#0b0f0d;color:#eef8f2}article{padding:18px 0;border-bottom:1px solid #26332d}h1{margin-bottom:30px}h2{font-size:14px;color:#55d69a}pre{overflow:auto;padding:14px;background:#111a15;border-radius:10px}code{font-family:ui-monospace,monospace}a{color:#65e6aa}</style></head><body><h1>${escapeHtml(session.title)}</h1>${body}</body></html>`;
+            const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a"); link.href = url; link.download = `${session.title.replace(/[^a-z0-9_-]+/gi, "_").slice(0,60) || "astra_chat"}.html`;
+            document.body.appendChild(link); link.click(); link.remove(); URL.revokeObjectURL(url); toast("HTML exported");
+        }
+
+        function speakText(text) {
+            if (!("speechSynthesis" in window)) { toast("Text-to-speech is not supported here"); return; }
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(String(text || ""));
+            utterance.rate = 1;
+            window.speechSynthesis.speak(utterance);
+            toast("Reading aloud");
+        }
+
+        let voiceRecognition = null;
+        function toggleVoice() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) { toast("Voice input is not supported in this browser"); return; }
+            const button = $("voiceButton");
+            if (voiceRecognition) { voiceRecognition.stop(); return; }
+            voiceRecognition = new SpeechRecognition();
+            voiceRecognition.lang = navigator.language || "en-US";
+            voiceRecognition.interimResults = true;
+            voiceRecognition.continuous = false;
+            let finalText = "";
+            voiceRecognition.onresult = (event) => {
+                finalText = Array.from(event.results).map((result) => result[0].transcript).join("");
+                $("input").value = finalText;
+                autoResizeComposer();
+            };
+            voiceRecognition.onstart = () => { button?.classList.add("listening"); button.textContent = "🎙 Listening…"; };
+            voiceRecognition.onend = () => { voiceRecognition = null; button?.classList.remove("listening"); button.textContent = "🎙 Voice"; if (finalText) $("input").focus(); };
+            voiceRecognition.onerror = () => { voiceRecognition = null; button?.classList.remove("listening"); button.textContent = "🎙 Voice"; toast("Voice input stopped"); };
+            voiceRecognition.start();
+        }
+
+        async function editAndResend(time) {
+            if (state.busy) return;
+            const session = currentSession();
+            if (!session) return;
+            const index = session.messages.findIndex((m) => m.time === time && m.role === "user");
+            if (index < 0) return;
+            const message = session.messages[index];
+            const edited = prompt("Edit your message", message.content || "");
+            if (edited === null || !edited.trim()) return;
+            session.messages = session.messages.slice(0, index);
+            state.files = [];
+            await persist();
+            render();
+            $("input").value = edited.trim();
+            autoResizeComposer();
+            await send();
+        }
+
         function toggleFocusMode() {
             document.body.classList.toggle("focus-mode");
             const active = document.body.classList.contains("focus-mode");
@@ -2855,233 +2913,89 @@
             selectChat(id);
         }
 
-        function toggleImageMode() {
-            const button = $("imageMode");
-            if (!button) return;
-
-            const next = !button.classList.contains("active");
-            button.classList.toggle("active", next);
-            button.textContent = next ? "Image ✓" : "Image";
-
-            if (next) {
-                const imageOption = Array.from($("model").options).find((option) => /image/i.test(option.value));
-                if (imageOption) {
-                    $("model").value = imageOption.value;
-                    $("modelStat").textContent = $("model").options[$("model").selectedIndex]?.text || "—";
-                    showSystemMessage(`Image mode enabled · ${imageOption.textContent}`);
-                } else {
-                    showSystemMessage("No Gemini image model is currently available. Refresh models first.");
-                }
-            }
-        }
-
-        function downloadGeneratedImage(image, index = 0) {
-            if (!image?.data) return;
-            const mime = image.mimeType || "image/png";
-            const extension = mime.includes("jpeg") || mime.includes("jpg") ? "jpg" : mime.includes("webp") ? "webp" : "png";
-            const link = document.createElement("a");
-            link.href = `data:${mime};base64,${image.data}`;
-            link.download = `astra-generated-${Date.now()}-${index + 1}.${extension}`;
-            link.click();
-        }
-
-                async function toggleSaved(key, message) {
+        async function toggleSaved(key, message) {
             const items = (await dbGet(key)) || [];
             const index = items.findIndex((item) => item.time === message.time && item.content === message.content);
-
             if (index >= 0) {
                 items.splice(index, 1);
                 await dbPut(key, items);
-                updateSavedNavCounts();
-                showSystemMessage(`${key === "Favorites" ? "Favorite" : "Bookmark"} removed.`);
-                return;
+                toast(`${key.slice(0, -1)} removed`);
+            } else {
+                items.push({ ...message, savedAt: Date.now() });
+                await dbPut(key, items);
+                toast(`${key.slice(0, -1)} saved`);
             }
-
-            const session = currentSession();
-            items.push({
-                ...message,
-                savedAt: Date.now(),
-                sessionId: session?.id || null,
-                sessionTitle: session?.title || "Conversation"
-            });
-            await dbPut(key, items);
             updateSavedNavCounts();
-            showSystemMessage(`${key === "Favorites" ? "Favorite" : "Bookmark"} saved.`);
-        }
-
-        async function removeSavedItem(key, index) {
-            const items = (await dbGet(key)) || [];
-            if (!items[index]) return;
-
-            items.splice(index, 1);
-            await dbPut(key, items);
-            updateSavedNavCounts();
-            listSaved(key);
-        }
-
-        async function clearSavedItems(key) {
-            const items = (await dbGet(key)) || [];
-            if (!items.length) return;
-
-            const label = key === "Favorites" ? "favorites" : "bookmarks";
-            if (!confirm(`Remove all ${label}?`)) return;
-
-            await dbPut(key, []);
-            updateSavedNavCounts();
-            listSaved(key);
-        }
-
-        async function copySavedItem(key, index) {
-            const items = (await dbGet(key)) || [];
-            const item = items[index];
-            if (!item) return;
-            await copyText(item.content || "");
-        }
-
-        async function openSavedItem(key, index) {
-            const items = (await dbGet(key)) || [];
-            const item = items[index];
-            if (!item) return;
-
-            let session = item.sessionId ? state.sessions.find((candidate) => candidate.id === item.sessionId) : null;
-            if (!session) {
-                session = state.sessions.find((candidate) =>
-                    candidate.messages.some((message) => message.time === item.time && message.content === item.content)
-                );
-            }
-
-            if (!session) {
-                showSystemMessage("The original conversation is no longer available.");
-                return;
-            }
-
-            closeModal();
-            selectChat(session.id);
-            requestAnimationFrame(() => {
-                const target = Array.from(document.querySelectorAll(".message"))
-                    .find((row) => row.querySelector(".meta")?.textContent.includes(new Date(item.time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })));
-                target?.scrollIntoView({ behavior: "smooth", block: "center" });
-            });
-        }
-
-        async function exportSaved(key) {
-            const items = (await dbGet(key)) || [];
-            if (!items.length) return;
-
-            const label = key === "Favorites" ? "Favorites" : "Bookmarks";
-            const markdown = [
-                `# ${label}`,
-                "",
-                ...items.flatMap((item) => [
-                    `## ${new Date(item.time).toLocaleString()}`,
-                    "",
-                    item.content || "",
-                    ""
-                ])
-            ].join("\n");
-
-            const blob = new Blob([markdown], { type: "text/markdown;charset=utf-8" });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = `${label.toLowerCase()}_${new Date().toISOString().slice(0, 10)}.md`;
-            link.click();
-            URL.revokeObjectURL(link.href);
-        }
-
-        function renderSavedItems(key, items, query = "", sort = "newest") {
-            const container = $("savedItems");
-            if (!container) return;
-
-            const normalized = query.trim().toLowerCase();
-            const filtered = items
-                .map((item, index) => ({ item, index }))
-                .filter(({ item }) => !normalized || String(item.content || "").toLowerCase().includes(normalized))
-                .sort((a, b) => {
-                    const aTime = Number(a.item.savedAt || a.item.time || 0);
-                    const bTime = Number(b.item.savedAt || b.item.time || 0);
-                    return sort === "oldest" ? aTime - bTime : bTime - aTime;
-                });
-
-            $("savedCount").textContent = `${filtered.length} shown · ${items.length} total`;
-
-            if (!filtered.length) {
-                container.innerHTML = `<div class="result">${normalized ? "No saved items match your search." : "Nothing saved yet."}</div>`;
-                return;
-            }
-
-            container.innerHTML = filtered.map(({ item, index }) => `
-                <div class="saved-item">
-                    <div class="saved-item-head">
-                        <div>
-                            <div class="saved-item-date">${escapeHtml(new Date(item.time || item.savedAt || Date.now()).toLocaleString())}</div>
-                            <div class="card-title" style="margin:3px 0 0;">${escapeHtml(item.sessionTitle || "Conversation")}</div>
-                        </div>
-                        <button class="saved-remove-top danger" type="button" title="Remove this ${label === "Favorites" ? "favorite" : "bookmark"}" aria-label="Remove saved item" onclick="removeSavedItem('${key}', ${index})">×</button>
-                    </div>
-                    <div class="saved-item-preview">${escapeHtml(item.content || "")}</div>
-                    <div class="saved-item-actions">
-                        <button type="button" onclick="copySavedItem('${key}', ${index})">Copy</button>
-                        <button type="button" onclick="openSavedItem('${key}', ${index})">Open chat</button>
-                        <button type="button" onclick="downloadResponse(${JSON.stringify(item.content || "")})">Download</button>
-                        <button class="danger" type="button" onclick="removeSavedItem('${key}', ${index})">Remove</button>
-                    </div>
-                </div>
-            `).join("");
         }
 
         async function listSaved(key) {
             const items = (await dbGet(key)) || [];
-            const label = key === "Favorites" ? "Favorites" : "Bookmarks";
+            const sorted = [...items].sort((a, b) => (b.savedAt || b.time || 0) - (a.savedAt || a.time || 0));
+            const cards = sorted.map((item, index) => `
+                <div class="result" data-saved-index="${index}">
+                    <div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start;">
+                        <strong>${escapeHtml(new Date(item.time).toLocaleString())}</strong>
+                        <button type="button" onclick="removeSavedItem('${key}', ${index})" aria-label="Remove saved item">×</button>
+                    </div>
+                    <div>${escapeHtml((item.content || "").slice(0, 900))}</div>
+                    <div class="modal-actions">
+                        <button type="button" onclick="copyText(${JSON.stringify(item.content || "")})">Copy</button>
+                        <button type="button" onclick="downloadTextFile(${JSON.stringify(item.content || "")}, 'astra-saved.txt')">Download</button>
+                        <button type="button" onclick="closeModal(); selectChat('${escapeHtml(item.sessionId || state.currentId)}')">Open</button>
+                    </div>
+                </div>
+            `).join("");
 
-            openModal(label, `
-                <div class="saved-toolbar">
-                    <input id="savedSearch" class="saved-search" placeholder="Search ${label.toLowerCase()}…" autocomplete="off">
-                    <select id="savedSort" class="saved-select" aria-label="Sort saved items">
-                        <option value="newest">Newest</option>
-                        <option value="oldest">Oldest</option>
-                    </select>
-                    <button type="button" onclick="exportSaved('${key}')">Export</button>
+            openModal(key, `
+                <div class="modal-actions" style="justify-content:space-between;">
+                    <input id="savedSearch" class="search-input" placeholder="Search saved items…" autocomplete="off">
+                    <button type="button" onclick="clearSaved('${key}')">Clear all</button>
                 </div>
-                <div class="saved-count" id="savedCount"></div>
-                <div id="savedItems"></div>
-                <div class="modal-actions" style="margin-top:10px;">
-                    <button type="button" onclick="clearSavedItems('${key}')">Clear all ${label.toLowerCase()}</button>
-                </div>
+                <div id="savedResults">${cards || `<div class="result">Nothing saved yet.</div>`}</div>
             `);
 
             const search = $("savedSearch");
-            const sort = $("savedSort");
-            const render = () => renderSavedItems(key, items, search.value, sort.value);
-            search.addEventListener("input", render);
-            sort.addEventListener("change", render);
-            render();
-            search.focus();
+            search?.addEventListener("input", () => {
+                const q = search.value.trim().toLowerCase();
+                document.querySelectorAll("#savedResults .result").forEach((el) => {
+                    el.style.display = !q || el.textContent.toLowerCase().includes(q) ? "block" : "none";
+                });
+            });
+        }
+
+        async function removeSavedItem(key, index) {
+            const items = (await dbGet(key)) || [];
+            const sorted = [...items].sort((a, b) => (b.savedAt || b.time || 0) - (a.savedAt || a.time || 0));
+            const target = sorted[index];
+            if (!target) return;
+            const realIndex = items.indexOf(target);
+            if (realIndex >= 0) items.splice(realIndex, 1);
+            await dbPut(key, items);
+            toast(`${key.slice(0, -1)} removed`);
+            updateSavedNavCounts();
+            listSaved(key);
+        }
+
+        async function clearSaved(key) {
+            const items = (await dbGet(key)) || [];
+            if (!items.length) return;
+            if (!confirm(`Clear all ${key.toLowerCase()}?`)) return;
+            await dbPut(key, []);
+            toast(`${key} cleared`);
+            updateSavedNavCounts();
+            listSaved(key);
         }
 
         async function updateSavedNavCounts() {
             try {
-                const [favorites, bookmarks] = await Promise.all([dbGet("Favorites"), dbGet("Bookmarks")]);
-                const favCount = (favorites || []).length;
-                const bookmarkCount = (bookmarks || []).length;
-                if ($("favoritesNav")) {
-                    $("favoritesNav").innerHTML = `★ &nbsp; Favorites${favCount ? ` <span style="margin-left:auto;opacity:.7;">${favCount}</span>` : ""}`;
-                }
-                if ($("bookmarksNav")) {
-                    $("bookmarksNav").innerHTML = `🔖 &nbsp; Bookmarks${bookmarkCount ? ` <span style="margin-left:auto;opacity:.7;">${bookmarkCount}</span>` : ""}`;
-                }
-            } catch (error) {
-                console.warn("Could not update saved counts", error);
-            }
-        }
-
-        function downloadResponse(content) {
-            const text = typeof content === "string" ? content : "";
-            const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = `astra-response-${new Date().toISOString().replace(/[:.]/g, "-")}.txt`;
-            link.click();
-            URL.revokeObjectURL(link.href);
+                const favorites = (await dbGet("Favorites")) || [];
+                const bookmarks = (await dbGet("Bookmarks")) || [];
+                const buttons = Array.from(document.querySelectorAll(".nav-button"));
+                const fav = buttons.find((button) => button.textContent.includes("Favorites"));
+                const book = buttons.find((button) => button.textContent.includes("Bookmarks"));
+                if (fav) fav.innerHTML = `★ &nbsp; Favorites <span style="margin-left:auto;opacity:.65">${favorites.length}</span>`;
+                if (book) book.innerHTML = `🔖 &nbsp; Bookmarks <span style="margin-left:auto;opacity:.65">${bookmarks.length}</span>`;
+            } catch {}
         }
 
         function prompts() {
@@ -3173,9 +3087,17 @@
                     <div class="stat"><span>API</span><strong>Gemini · Vercel server</strong></div>
                     <div class="stat"><span>Storage</span><strong>Local browser</strong></div>
                 </div>
+                <label style="display:block;margin:14px 0 7px;color:var(--muted);font-size:12px;">Custom instructions</label>
+                <textarea id="customInstructions" class="custom-instruction" placeholder="Tell Astra how you want it to respond…">${escapeHtml(localStorage.getItem("hashke-astra-instructions") || "")}</textarea>
+                <button class="wide-button" type="button" onclick="saveCustomInstructions()">✓ &nbsp; Save instructions</button>
                 <button class="wide-button" type="button" onclick="theme(); closeModal();">◐ &nbsp; Toggle appearance</button>
                 <button class="wide-button" type="button" onclick="clearLocalMemory()">⌫ &nbsp; Clear all local memory</button>
             `);
+        }
+
+        function saveCustomInstructions() {
+            localStorage.setItem("hashke-astra-instructions", $("customInstructions")?.value.trim() || "");
+            toast("Custom instructions saved");
         }
 
         async function clearLocalMemory() {
@@ -3286,7 +3208,7 @@
             try {
                 const answer = await askGemini(session.messages);
                 removeThinking();
-                session.messages.push({ role: "assistant", content: answer.text || "", images: answer.images || [], time: Date.now() });
+                session.messages.push({ role: "assistant", content: answer.text || "", images: answer.images || [], sessionId: session.id, time: Date.now() });
                 await persist();
                 render();
                 scrollToBottom();
@@ -3302,6 +3224,11 @@
         }
 
         document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape" && state.busy) {
+                event.preventDefault();
+                stopGeneration();
+                return;
+            }
             if (!event.ctrlKey) {
                 return;
             }
