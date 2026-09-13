@@ -315,12 +315,13 @@
 
         .chat {
             min-height: 0;
-            flex: 1 1 auto;
+            flex: 1 1 0;
             overflow-y: auto;
             overflow-x: hidden;
-            padding: 30px 5vw 34px;
+            padding: 24px 5vw 24px;
             scroll-behavior: smooth;
             overscroll-behavior: contain;
+            overflow-anchor: auto;
         }
 
         .welcome {
@@ -390,6 +391,12 @@
             margin: 0 auto;
             display: grid;
             gap: 18px;
+        }
+
+        .message,
+        .bubble-wrap,
+        .bubble {
+            min-width: 0;
         }
 
         .message {
@@ -502,20 +509,63 @@
         .markdown-body pre {
             width: 100%;
             max-width: 100%;
+            max-height: min(48vh, 460px);
             margin: 10px 0;
             padding: 12px;
-            overflow-x: auto;
-            overflow-y: hidden;
+            overflow: auto;
+            overscroll-behavior: contain;
             border: 1px solid var(--border);
             border-radius: 10px;
             background: var(--bg-soft);
         }
 
         .markdown-body pre code {
+            display: block;
             padding: 0;
             border: 0;
             background: transparent;
             white-space: pre;
+            overflow-wrap: normal;
+        }
+
+        .code-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-top: 10px;
+            padding: 6px 8px;
+            border: 1px solid var(--border);
+            border-bottom: 0;
+            border-radius: 10px 10px 0 0;
+            color: var(--muted-2);
+            background: var(--panel-3);
+            font-size: 9px;
+        }
+
+        .code-toolbar + pre {
+            margin-top: 0;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .code-language {
+            font-weight: 800;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+        }
+
+        .copy-code-button {
+            padding: 5px 8px;
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            color: var(--muted);
+            background: var(--panel-2);
+            font-size: 9px;
+        }
+
+        .copy-code-button:hover {
+            color: var(--emerald-2);
+            border-color: var(--border-strong);
         }
 
         .markdown-body a {
@@ -1105,7 +1155,11 @@
             }
 
             .chat {
-                padding: 20px 12px;
+                padding: 18px 12px 18px;
+            }
+
+            .markdown-body pre {
+                max-height: 42vh;
             }
 
             .composer-shell {
@@ -1496,7 +1550,8 @@
             const closeCode = () => {
                 if (codeBuffer === null) return;
                 const languageClass = codeLanguage ? ` class="language-${escapeHtml(codeLanguage)}"` : "";
-                html.push(`<pre><code${languageClass}>${escapeHtml(codeBuffer.join("\n"))}</code></pre>`);
+                const languageLabel = codeLanguage ? escapeHtml(codeLanguage) : "Code";
+                html.push(`<div class="code-toolbar"><span class="code-language">${languageLabel}</span><button class="copy-code-button" type="button">Copy code</button></div><pre><code${languageClass}>${escapeHtml(codeBuffer.join("\n"))}</code></pre>`);
                 codeBuffer = null;
                 codeLanguage = "";
             };
@@ -1570,6 +1625,35 @@
             return html.join("");
         }
 
+        function wireCodeCopyButtons(container) {
+            container.querySelectorAll(".copy-code-button").forEach((button) => {
+                button.addEventListener("click", async () => {
+                    const pre = button.closest(".code-toolbar")?.nextElementSibling;
+                    const code = pre?.querySelector("code")?.textContent || "";
+                    if (!code) return;
+
+                    try {
+                        await navigator.clipboard.writeText(code);
+                    } catch {
+                        const area = document.createElement("textarea");
+                        area.value = code;
+                        area.style.position = "fixed";
+                        area.style.opacity = "0";
+                        document.body.appendChild(area);
+                        area.select();
+                        document.execCommand("copy");
+                        area.remove();
+                    }
+
+                    const original = button.textContent;
+                    button.textContent = "Copied ✓";
+                    setTimeout(() => {
+                        button.textContent = original;
+                    }, 1200);
+                });
+            });
+        }
+
         function addMessage(message) {
             const row = document.createElement("div");
             row.className = `message ${message.role}`;
@@ -1588,6 +1672,7 @@
             const bubble = document.createElement("div");
             bubble.className = "bubble markdown-body";
             bubble.innerHTML = renderMarkdown(message.content || "");
+            wireCodeCopyButtons(bubble);
 
             wrapper.append(meta, bubble);
 
@@ -1655,7 +1740,11 @@
 
         function scrollToBottom() {
             requestAnimationFrame(() => {
-                $("chat").scrollTop = $("chat").scrollHeight;
+                const chat = $("chat");
+                chat.scrollTop = chat.scrollHeight;
+                requestAnimationFrame(() => {
+                    chat.scrollTop = chat.scrollHeight;
+                });
             });
         }
 
