@@ -612,7 +612,19 @@
         }
 
         .message-actions {
+            display: flex;
+            align-items: center;
             flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 9px;
+            padding: 5px;
+            width: fit-content;
+            max-width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            background: color-mix(in srgb, var(--panel-2) 76%, transparent);
+            box-shadow: 0 7px 22px var(--shadow);
+            backdrop-filter: blur(12px);
         }
 
         .voice-button.listening {
@@ -645,23 +657,45 @@
             font: inherit; line-height: 1.5;
         }
 
-            display: flex;
-            gap: 5px;
-            margin-top: 7px;
-        }
-
         .message-actions button {
-            padding: 5px 7px;
-            border: 1px solid var(--border);
-            border-radius: 7px;
-            color: var(--muted-2);
+            appearance: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            min-height: 31px;
+            padding: 0 10px;
+            border: 1px solid transparent;
+            border-radius: 9px;
+            color: var(--muted);
             background: transparent;
-            font-size: 9px;
+            font-size: 10px;
+            font-weight: 650;
+            letter-spacing: .01em;
+            cursor: pointer;
+            transition: transform 150ms ease, color 150ms ease, background 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
         }
 
         .message-actions button:hover {
-            color: var(--emerald-2);
+            color: var(--text);
+            background: color-mix(in srgb, var(--emerald) 10%, var(--panel-2));
             border-color: var(--border-strong);
+            box-shadow: 0 5px 14px rgba(16,185,129,.08);
+            transform: translateY(-1px);
+        }
+
+        .message-actions button:active {
+            transform: translateY(0);
+        }
+
+        .message-actions button:focus-visible {
+            outline: 2px solid var(--emerald-2);
+            outline-offset: 1px;
+        }
+
+        .message-actions button[data-action="favorite"],
+        .message-actions button[data-action="bookmark"] {
+            background: color-mix(in srgb, var(--emerald) 5%, transparent);
         }
 
         .generated-files {
@@ -716,14 +750,18 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 6px 9px;
+            gap: 6px;
+            min-height: 30px;
+            padding: 0 10px;
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 9px;
             color: var(--muted);
-            background: var(--panel-2);
-            font-size: 9px;
+            background: color-mix(in srgb, var(--panel-2) 86%, transparent);
+            font-size: 10px;
+            font-weight: 650;
             text-decoration: none;
             cursor: pointer;
+            transition: 150ms ease;
         }
 
         .generated-file-actions button:hover,
@@ -1632,13 +1670,45 @@
             transform: translateY(-1px);
         }
 
-        .message-actions button {
-            border-radius: 9px;
-            background: rgba(255,255,255,.28);
+        body:not(.light) .message-actions {
+            background: rgba(7, 18, 13, .72);
         }
 
-        body:not(.light) .message-actions button {
-            background: rgba(10,29,21,.4);
+        body.light .message-actions {
+            background: rgba(255, 255, 255, .76);
+        }
+
+        .message-actions .action-icon {
+            width: 17px;
+            height: 17px;
+            display: inline-grid;
+            place-items: center;
+            opacity: .9;
+            font-size: 13px;
+            line-height: 1;
+        }
+
+        .message-actions button.speaking {
+            border-color: rgba(255, 110, 110, .45);
+            background: rgba(255, 90, 90, .10);
+        }
+        .message-actions button.speaking .action-icon {
+            color: #ff8b8b;
+        }
+
+        .message-actions .action-label {
+            white-space: nowrap;
+        }
+
+        @media (max-width: 640px) {
+            .message-actions {
+                width: 100%;
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                scrollbar-width: none;
+            }
+            .message-actions::-webkit-scrollbar { display: none; }
+            .message-actions button { flex: 0 0 auto; }
         }
 
         .composer-shell {
@@ -2353,12 +2423,12 @@
                     open.href = dataUrl;
                     open.target = "_blank";
                     open.rel = "noopener noreferrer";
-                    open.textContent = "Open";
+                    open.innerHTML = '<span>↗</span> Open';
 
                     const download = document.createElement("a");
                     download.href = dataUrl;
                     download.download = filename;
-                    download.textContent = "Download";
+                    download.innerHTML = '<span>↓</span> Download';
 
                     actions.append(open, download);
                     card.appendChild(actions);
@@ -2373,7 +2443,8 @@
                 actions.className = "message-actions";
                 const editButton = document.createElement("button");
                 editButton.type = "button";
-                editButton.textContent = "Edit & resend";
+                editButton.innerHTML = '<span class="action-icon">✎</span><span class="action-label">Edit & resend</span>';
+                editButton.dataset.action = "edit";
                 editButton.onclick = () => editAndResend(message.time);
                 actions.appendChild(editButton);
                 wrapper.appendChild(actions);
@@ -2385,32 +2456,42 @@
 
                 const copyButton = document.createElement("button");
                 copyButton.type = "button";
-                copyButton.textContent = "Copy";
+                copyButton.innerHTML = '<span class="action-icon">⧉</span><span class="action-label">Copy</span>';
+                copyButton.dataset.action = "copy";
+                copyButton.setAttribute("aria-label", "Copy response");
                 copyButton.onclick = async () => { await copyText(message.content || ""); toast("Response copied"); };
 
                 const speakButton = document.createElement("button");
                 speakButton.type = "button";
-                speakButton.textContent = "Read aloud";
-                speakButton.onclick = () => speakText(message.content || "");
+                speakButton.innerHTML = '<span class="action-icon">◖</span><span class="action-label">Read aloud</span>';
+                speakButton.dataset.action = "speak";
+                speakButton.setAttribute("aria-label", "Read response aloud");
+                speakButton.onclick = () => toggleSpeakText(message.content || "", speakButton);
+                updateSpeechButtons();
 
                 const downloadButton = document.createElement("button");
                 downloadButton.type = "button";
-                downloadButton.textContent = "Download .txt";
+                downloadButton.innerHTML = '<span class="action-icon">↓</span><span class="action-label">Download</span>';
+                downloadButton.dataset.action = "download";
+                downloadButton.setAttribute("aria-label", "Download response as text");
                 downloadButton.onclick = () => downloadTextFile(message.content || "", `astra-response-${Date.now()}.txt`);
 
                 const bookmarkButton = document.createElement("button");
                 bookmarkButton.type = "button";
-                bookmarkButton.textContent = "Bookmark";
+                bookmarkButton.innerHTML = '<span class="action-icon">🔖</span><span class="action-label">Bookmark</span>';
+                bookmarkButton.dataset.action = "bookmark";
                 bookmarkButton.onclick = () => toggleSaved("Bookmarks", message);
 
                 const favoriteButton = document.createElement("button");
                 favoriteButton.type = "button";
-                favoriteButton.textContent = "Favorite";
+                favoriteButton.innerHTML = '<span class="action-icon">★</span><span class="action-label">Favorite</span>';
+                favoriteButton.dataset.action = "favorite";
                 favoriteButton.onclick = () => toggleSaved("Favorites", message);
 
                 const regenButton = document.createElement("button");
                 regenButton.type = "button";
-                regenButton.textContent = "Regenerate";
+                regenButton.innerHTML = '<span class="action-icon">↻</span><span class="action-label">Regenerate</span>';
+                regenButton.dataset.action = "regenerate";
                 regenButton.onclick = () => regen();
 
                 actions.append(copyButton, speakButton, downloadButton, bookmarkButton, favoriteButton, regenButton);
@@ -2873,13 +2954,76 @@
             document.body.appendChild(link); link.click(); link.remove(); URL.revokeObjectURL(url); toast("HTML exported");
         }
 
-        function speakText(text) {
-            if (!("speechSynthesis" in window)) { toast("Text-to-speech is not supported here"); return; }
+        let activeSpeechUtterance = null;
+        let activeSpeechText = "";
+
+        function updateSpeechButtons() {
+            const speaking = Boolean(activeSpeechUtterance && window.speechSynthesis && window.speechSynthesis.speaking);
+            document.querySelectorAll('.message-actions [data-action="speak"]').forEach((button) => {
+                const isActive = speaking && button.dataset.speechText === activeSpeechText;
+                button.classList.toggle("speaking", isActive);
+                button.innerHTML = isActive
+                    ? '<span class="action-icon">■</span><span class="action-label">Stop reading</span>'
+                    : '<span class="action-icon">◖</span><span class="action-label">Read aloud</span>';
+                button.setAttribute("aria-label", isActive ? "Stop reading aloud" : "Read response aloud");
+                if (!isActive) button.removeAttribute("data-speech-text");
+            });
+        }
+
+        function stopSpeaking() {
+            if (!("speechSynthesis" in window)) return;
             window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(String(text || ""));
+            activeSpeechUtterance = null;
+            activeSpeechText = "";
+            updateSpeechButtons();
+            toast("Reading stopped");
+        }
+
+        function toggleSpeakText(text, button) {
+            if (!("speechSynthesis" in window)) { toast("Text-to-speech is not supported here"); return; }
+            const value = String(text || "").trim();
+            if (!value) { toast("Nothing to read"); return; }
+
+            const speakingThis = activeSpeechUtterance && window.speechSynthesis.speaking && activeSpeechText === value;
+            if (speakingThis) {
+                stopSpeaking();
+                return;
+            }
+
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(value);
             utterance.rate = 1;
+            utterance.onstart = () => {
+                activeSpeechUtterance = utterance;
+                activeSpeechText = value;
+                if (button) button.dataset.speechText = value;
+                updateSpeechButtons();
+                toast("Reading aloud");
+            };
+            utterance.onend = () => {
+                if (activeSpeechUtterance === utterance) {
+                    activeSpeechUtterance = null;
+                    activeSpeechText = "";
+                    updateSpeechButtons();
+                }
+            };
+            utterance.onerror = () => {
+                if (activeSpeechUtterance === utterance) {
+                    activeSpeechUtterance = null;
+                    activeSpeechText = "";
+                    updateSpeechButtons();
+                }
+            };
+            activeSpeechUtterance = utterance;
+            activeSpeechText = value;
+            if (button) button.dataset.speechText = value;
             window.speechSynthesis.speak(utterance);
-            toast("Reading aloud");
+            updateSpeechButtons();
+        }
+
+        // Keep the UI in sync if the browser pauses/resumes speech internally.
+        if ("speechSynthesis" in window) {
+            window.setInterval(updateSpeechButtons, 250);
         }
 
         let voiceRecognition = null;
