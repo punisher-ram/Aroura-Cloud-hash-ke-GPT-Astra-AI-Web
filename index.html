@@ -631,6 +631,224 @@
             border-color: var(--border-strong);
         }
 
+        .image-mode-button.active {
+            color: #062b1c;
+            background: linear-gradient(135deg, #a7f3d0, #34d399);
+            border-color: rgba(16, 185, 129, .55);
+            box-shadow: 0 0 0 3px rgba(52, 211, 153, .10);
+        }
+
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .generated-image-card {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: #071b13;
+        }
+
+        .generated-image-card img {
+            display: block;
+            width: 100%;
+            height: auto;
+            max-height: 620px;
+            object-fit: contain;
+            background: #071b13;
+        }
+
+        .generated-image-tools {
+            display: flex;
+            gap: 6px;
+            padding: 7px;
+            border-top: 1px solid var(--border);
+            background: rgba(4, 18, 12, .88);
+        }
+
+        .saved-item {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 7px;
+            margin-bottom: 10px;
+        }
+
+        .saved-search {
+            width: 100%;
+            min-width: 0;
+            padding: 9px 10px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            outline: none;
+            color: var(--text);
+            background: var(--panel-3);
+        }
+
+        .saved-search:focus {
+            border-color: var(--border-strong);
+            box-shadow: 0 0 0 3px rgba(52, 211, 153, .08);
+        }
+
+        .saved-select,
+        .saved-toolbar button {
+            min-height: 35px;
+            padding: 7px 9px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            color: var(--muted);
+            background: var(--panel-2);
+            font-size: 9px;
+        }
+
+        .saved-toolbar button:hover,
+        .saved-select:hover {
+            color: var(--emerald-2);
+            border-color: var(--border-strong);
+        }
+
+        .saved-count {
+            margin: 0 0 8px;
+            color: var(--muted-2);
+            font-size: 9px;
+        }
+
+        .saved-item {
+            margin-bottom: 8px;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 11px;
+            background: var(--panel-3);
+        }
+
+        .saved-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .saved-item-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+
+        .saved-remove-top {
+            width: 28px;
+            height: 28px;
+            flex: 0 0 auto;
+            display: grid;
+            place-items: center;
+            padding: 0 !important;
+            border: 1px solid var(--border) !important;
+            border-radius: 8px !important;
+            color: var(--muted-2);
+            background: transparent;
+            font-size: 16px !important;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .saved-remove-top:hover {
+            color: var(--danger) !important;
+            border-color: var(--danger) !important;
+            background: rgba(239, 68, 68, .08);
+        }
+
+        .saved-item-date {
+            color: var(--text);
+            font-size: 9px;
+            font-weight: 800;
+        }
+
+        .saved-item-preview {
+            max-height: 132px;
+            overflow: auto;
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.55;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .saved-item-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 8px;
+        }
+
+        .saved-item-actions button {
+            padding: 5px 7px;
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            color: var(--muted-2);
+            background: transparent;
+            font-size: 9px;
+        }
+
+        .saved-item-actions button:hover {
+            color: var(--emerald-2);
+            border-color: var(--border-strong);
+        }
+
+        .saved-item-actions .danger:hover {
+            color: var(--danger);
+            border-color: var(--danger);
+        }
+
+        @media (max-width: 720px) {
+            .image-mode-button.active {
+            color: #062b1c;
+            background: linear-gradient(135deg, #a7f3d0, #34d399);
+            border-color: rgba(16, 185, 129, .55);
+            box-shadow: 0 0 0 3px rgba(52, 211, 153, .10);
+        }
+
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .generated-image-card {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: #071b13;
+        }
+
+        .generated-image-card img {
+            display: block;
+            width: 100%;
+            height: auto;
+            max-height: 620px;
+            object-fit: contain;
+            background: #071b13;
+        }
+
+        .generated-image-tools {
+            display: flex;
+            gap: 6px;
+            padding: 7px;
+            border-top: 1px solid var(--border);
+            background: rgba(4, 18, 12, .88);
+        }
+
+        .saved-item {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .saved-search {
+                grid-column: 1 / -1;
+            }
+        }
+
         .composer-shell {
             flex: 0 0 auto;
             padding: 11px 21px 17px;
@@ -1565,8 +1783,8 @@
             <nav class="nav" aria-label="Workspace navigation">
                 <button class="nav-button active" type="button">⌂ &nbsp; Chat</button>
                 <button class="nav-button" type="button" onclick="searchUI()">⌕ &nbsp; Search conversations</button>
-                <button class="nav-button" type="button" onclick="listSaved('Favorites')">★ &nbsp; Favorites</button>
-                <button class="nav-button" type="button" onclick="listSaved('Bookmarks')">🔖 &nbsp; Bookmarks</button>
+                <button id="favoritesNav" class="nav-button" type="button" onclick="listSaved('Favorites')">★ &nbsp; Favorites</button>
+                <button id="bookmarksNav" class="nav-button" type="button" onclick="listSaved('Bookmarks')">🔖 &nbsp; Bookmarks</button>
                 <button class="nav-button" type="button" onclick="analytics()">◒ &nbsp; Analytics</button>
                 <button class="nav-button" type="button" onclick="settings()">⚙ &nbsp; Settings</button>
             </nav>
@@ -1627,6 +1845,7 @@
                             <input id="file" type="file" multiple>
                         </label>
                         <button class="toolbar-button" type="button" onclick="prompts()">Prompts</button>
+                        <button id="imageMode" class="toolbar-button image-mode-button" type="button" onclick="toggleImageMode()" title="Generate an image with a Gemini image model">Image</button>
                         <button class="toolbar-button" type="button" onclick="urlUI()">URL</button>
                         <select id="temp" class="toolbar-button toolbar-select" aria-label="Response style">
                             <option value="0.2">Precise</option>
@@ -1699,6 +1918,7 @@
             { label: "Gemini 3.6 Flash", id: "gemini-3.6-flash" },
             { label: "Gemini 3.7 Flash", id: "gemini-3.7-flash" },
             { label: "Gemini 3.8 Flash", id: "gemini-3.8-flash" },
+            { label: "Gemini 3.1 Flash Image", id: "gemini-3.1-flash-image" },
             { label: "Gemma 4 31B", id: "gemma-4-31b-it" }
         ];
         const DATABASE_NAME = "hashke_astra_ai_v3";
@@ -1792,6 +2012,7 @@
                     render();
                 }
 
+                await updateSavedNavCounts();
                 await models();
             } catch (error) {
                 console.error(error);
@@ -2071,6 +2292,42 @@
             bubble.innerHTML = renderMarkdown(message.content || "");
             wireCodeCopyButtons(bubble);
 
+            if (Array.isArray(message.images) && message.images.length) {
+                const gallery = document.createElement("div");
+                gallery.className = "image-gallery";
+
+                message.images.forEach((image, index) => {
+                    if (!image?.data) return;
+
+                    const card = document.createElement("div");
+                    card.className = "generated-image-card";
+
+                    const img = document.createElement("img");
+                    img.src = `data:${image.mimeType || "image/png"};base64,${image.data}`;
+                    img.alt = `Astra generated image ${index + 1}`;
+                    img.loading = "lazy";
+
+                    const tools = document.createElement("div");
+                    tools.className = "generated-image-tools";
+
+                    const openButton = document.createElement("button");
+                    openButton.type = "button";
+                    openButton.textContent = "Open";
+                    openButton.onclick = () => window.open(img.src, "_blank", "noopener,noreferrer");
+
+                    const saveButton = document.createElement("button");
+                    saveButton.type = "button";
+                    saveButton.textContent = "Download";
+                    saveButton.onclick = () => downloadGeneratedImage(image, index);
+
+                    tools.append(openButton, saveButton);
+                    card.append(img, tools);
+                    gallery.appendChild(card);
+                });
+
+                if (gallery.children.length) bubble.appendChild(gallery);
+            }
+
             wrapper.append(meta, bubble);
 
             if (message.role === "assistant" && !message.ephemeral) {
@@ -2085,14 +2342,27 @@
                 const bookmarkButton = document.createElement("button");
                 bookmarkButton.type = "button";
                 bookmarkButton.textContent = "Bookmark";
-                bookmarkButton.onclick = () => saveItem("Bookmarks", message);
+                bookmarkButton.onclick = () => toggleSaved("Bookmarks", message);
 
                 const favoriteButton = document.createElement("button");
                 favoriteButton.type = "button";
                 favoriteButton.textContent = "Favorite";
-                favoriteButton.onclick = () => saveItem("Favorites", message);
+                favoriteButton.onclick = () => toggleSaved("Favorites", message);
 
-                actions.append(copyButton, bookmarkButton, favoriteButton);
+                const downloadButton = document.createElement("button");
+                downloadButton.type = "button";
+                downloadButton.textContent = "Download";
+                downloadButton.onclick = () => downloadResponse(message.content || "");
+
+                actions.append(copyButton, bookmarkButton, favoriteButton, downloadButton);
+
+                if (Array.isArray(message.images) && message.images.length) {
+                    const imageDownloadButton = document.createElement("button");
+                    imageDownloadButton.type = "button";
+                    imageDownloadButton.textContent = "Download images";
+                    imageDownloadButton.onclick = () => message.images.forEach((image, index) => downloadGeneratedImage(image, index));
+                    actions.appendChild(imageDownloadButton);
+                }
                 wrapper.appendChild(actions);
             }
 
@@ -2169,6 +2439,15 @@
             $("send").disabled = true;
 
             try {
+                if ($("imageMode")?.classList.contains("active")) {
+                    const imageOption = Array.from($("model").options).find((option) => /image/i.test(option.value));
+                    if (!imageOption) {
+                        throw new Error("No Gemini image model is available for this API project. Refresh the model list and try again.");
+                    }
+                    $("model").value = imageOption.value;
+                    $("modelStat").textContent = $("model").options[$("model").selectedIndex]?.text || "—";
+                }
+
                 /*
                  * V1 attachment handling:
                  * Send the original attachment bytes to Gemini as inline_data.
@@ -2224,7 +2503,8 @@
 
                     session.messages.push({
                         role: "assistant",
-                        content: answer,
+                        content: answer.text || "",
+                        images: answer.images || [],
                         time: Date.now()
                     });
 
@@ -2315,6 +2595,7 @@
                     };
                 });
 
+            const imageRequested = /image/i.test(model) || $("imageMode")?.classList.contains("active");
             const payload = {
                 systemInstruction,
                 contents,
@@ -2322,6 +2603,10 @@
                     temperature: Number($("temp").value)
                 }
             };
+
+            if (imageRequested) {
+                payload.generationConfig.responseModalities = ["TEXT", "IMAGE"];
+            }
 
             let response;
             try {
@@ -2345,17 +2630,26 @@
                 throw new Error(data?.error?.message || `Gemini returned HTTP ${response.status}.`);
             }
 
-            const answer = data?.candidates?.[0]?.content?.parts
-                ?.map((part) => part.text || "")
+            const parts = data?.candidates?.[0]?.content?.parts || [];
+            const answer = parts
+                .map((part) => part.text || "")
                 .join("")
                 .trim();
 
-            if (!answer) {
+            const images = parts
+                .map((part) => part.inlineData || part.inline_data || null)
+                .filter((image) => image?.data)
+                .map((image) => ({
+                    mimeType: image.mimeType || image.mime_type || "image/png",
+                    data: image.data
+                }));
+
+            if (!answer && !images.length) {
                 const reason = data?.candidates?.[0]?.finishReason;
-                throw new Error(reason ? `Gemini returned no text (finish reason: ${reason}).` : "Gemini returned no assistant message.");
+                throw new Error(reason ? `Gemini returned no output (finish reason: ${reason}).` : "Gemini returned no assistant output.");
             }
 
-            return answer;
+            return { text: answer, images };
         }
 
         function renderGeminiModels(models) {
@@ -2561,28 +2855,233 @@
             selectChat(id);
         }
 
-        async function saveItem(key, message) {
-            const items = (await dbGet(key)) || [];
-            const exists = items.some((item) => item.time === message.time && item.content === message.content);
+        function toggleImageMode() {
+            const button = $("imageMode");
+            if (!button) return;
 
-            if (!exists) {
-                items.push(message);
-                await dbPut(key, items);
-                showSystemMessage(`${key.slice(0, -1)} saved.`);
+            const next = !button.classList.contains("active");
+            button.classList.toggle("active", next);
+            button.textContent = next ? "Image ✓" : "Image";
+
+            if (next) {
+                const imageOption = Array.from($("model").options).find((option) => /image/i.test(option.value));
+                if (imageOption) {
+                    $("model").value = imageOption.value;
+                    $("modelStat").textContent = $("model").options[$("model").selectedIndex]?.text || "—";
+                    showSystemMessage(`Image mode enabled · ${imageOption.textContent}`);
+                } else {
+                    showSystemMessage("No Gemini image model is currently available. Refresh models first.");
+                }
             }
+        }
+
+        function downloadGeneratedImage(image, index = 0) {
+            if (!image?.data) return;
+            const mime = image.mimeType || "image/png";
+            const extension = mime.includes("jpeg") || mime.includes("jpg") ? "jpg" : mime.includes("webp") ? "webp" : "png";
+            const link = document.createElement("a");
+            link.href = `data:${mime};base64,${image.data}`;
+            link.download = `astra-generated-${Date.now()}-${index + 1}.${extension}`;
+            link.click();
+        }
+
+                async function toggleSaved(key, message) {
+            const items = (await dbGet(key)) || [];
+            const index = items.findIndex((item) => item.time === message.time && item.content === message.content);
+
+            if (index >= 0) {
+                items.splice(index, 1);
+                await dbPut(key, items);
+                updateSavedNavCounts();
+                showSystemMessage(`${key === "Favorites" ? "Favorite" : "Bookmark"} removed.`);
+                return;
+            }
+
+            const session = currentSession();
+            items.push({
+                ...message,
+                savedAt: Date.now(),
+                sessionId: session?.id || null,
+                sessionTitle: session?.title || "Conversation"
+            });
+            await dbPut(key, items);
+            updateSavedNavCounts();
+            showSystemMessage(`${key === "Favorites" ? "Favorite" : "Bookmark"} saved.`);
+        }
+
+        async function removeSavedItem(key, index) {
+            const items = (await dbGet(key)) || [];
+            if (!items[index]) return;
+
+            items.splice(index, 1);
+            await dbPut(key, items);
+            updateSavedNavCounts();
+            listSaved(key);
+        }
+
+        async function clearSavedItems(key) {
+            const items = (await dbGet(key)) || [];
+            if (!items.length) return;
+
+            const label = key === "Favorites" ? "favorites" : "bookmarks";
+            if (!confirm(`Remove all ${label}?`)) return;
+
+            await dbPut(key, []);
+            updateSavedNavCounts();
+            listSaved(key);
+        }
+
+        async function copySavedItem(key, index) {
+            const items = (await dbGet(key)) || [];
+            const item = items[index];
+            if (!item) return;
+            await copyText(item.content || "");
+        }
+
+        async function openSavedItem(key, index) {
+            const items = (await dbGet(key)) || [];
+            const item = items[index];
+            if (!item) return;
+
+            let session = item.sessionId ? state.sessions.find((candidate) => candidate.id === item.sessionId) : null;
+            if (!session) {
+                session = state.sessions.find((candidate) =>
+                    candidate.messages.some((message) => message.time === item.time && message.content === item.content)
+                );
+            }
+
+            if (!session) {
+                showSystemMessage("The original conversation is no longer available.");
+                return;
+            }
+
+            closeModal();
+            selectChat(session.id);
+            requestAnimationFrame(() => {
+                const target = Array.from(document.querySelectorAll(".message"))
+                    .find((row) => row.querySelector(".meta")?.textContent.includes(new Date(item.time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })));
+                target?.scrollIntoView({ behavior: "smooth", block: "center" });
+            });
+        }
+
+        async function exportSaved(key) {
+            const items = (await dbGet(key)) || [];
+            if (!items.length) return;
+
+            const label = key === "Favorites" ? "Favorites" : "Bookmarks";
+            const markdown = [
+                `# ${label}`,
+                "",
+                ...items.flatMap((item) => [
+                    `## ${new Date(item.time).toLocaleString()}`,
+                    "",
+                    item.content || "",
+                    ""
+                ])
+            ].join("\n");
+
+            const blob = new Blob([markdown], { type: "text/markdown;charset=utf-8" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `${label.toLowerCase()}_${new Date().toISOString().slice(0, 10)}.md`;
+            link.click();
+            URL.revokeObjectURL(link.href);
+        }
+
+        function renderSavedItems(key, items, query = "", sort = "newest") {
+            const container = $("savedItems");
+            if (!container) return;
+
+            const normalized = query.trim().toLowerCase();
+            const filtered = items
+                .map((item, index) => ({ item, index }))
+                .filter(({ item }) => !normalized || String(item.content || "").toLowerCase().includes(normalized))
+                .sort((a, b) => {
+                    const aTime = Number(a.item.savedAt || a.item.time || 0);
+                    const bTime = Number(b.item.savedAt || b.item.time || 0);
+                    return sort === "oldest" ? aTime - bTime : bTime - aTime;
+                });
+
+            $("savedCount").textContent = `${filtered.length} shown · ${items.length} total`;
+
+            if (!filtered.length) {
+                container.innerHTML = `<div class="result">${normalized ? "No saved items match your search." : "Nothing saved yet."}</div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(({ item, index }) => `
+                <div class="saved-item">
+                    <div class="saved-item-head">
+                        <div>
+                            <div class="saved-item-date">${escapeHtml(new Date(item.time || item.savedAt || Date.now()).toLocaleString())}</div>
+                            <div class="card-title" style="margin:3px 0 0;">${escapeHtml(item.sessionTitle || "Conversation")}</div>
+                        </div>
+                        <button class="saved-remove-top danger" type="button" title="Remove this ${label === "Favorites" ? "favorite" : "bookmark"}" aria-label="Remove saved item" onclick="removeSavedItem('${key}', ${index})">×</button>
+                    </div>
+                    <div class="saved-item-preview">${escapeHtml(item.content || "")}</div>
+                    <div class="saved-item-actions">
+                        <button type="button" onclick="copySavedItem('${key}', ${index})">Copy</button>
+                        <button type="button" onclick="openSavedItem('${key}', ${index})">Open chat</button>
+                        <button type="button" onclick="downloadResponse(${JSON.stringify(item.content || "")})">Download</button>
+                        <button class="danger" type="button" onclick="removeSavedItem('${key}', ${index})">Remove</button>
+                    </div>
+                </div>
+            `).join("");
         }
 
         async function listSaved(key) {
             const items = (await dbGet(key)) || [];
+            const label = key === "Favorites" ? "Favorites" : "Bookmarks";
 
-            openModal(key, items.length
-                ? items.map((item) => `
-                    <div class="result">
-                        <strong>${escapeHtml(new Date(item.time).toLocaleString())}</strong>
-                        <div>${escapeHtml(item.content.slice(0, 900))}</div>
-                    </div>
-                `).join("")
-                : `<div class="result">Nothing saved yet.</div>`);
+            openModal(label, `
+                <div class="saved-toolbar">
+                    <input id="savedSearch" class="saved-search" placeholder="Search ${label.toLowerCase()}…" autocomplete="off">
+                    <select id="savedSort" class="saved-select" aria-label="Sort saved items">
+                        <option value="newest">Newest</option>
+                        <option value="oldest">Oldest</option>
+                    </select>
+                    <button type="button" onclick="exportSaved('${key}')">Export</button>
+                </div>
+                <div class="saved-count" id="savedCount"></div>
+                <div id="savedItems"></div>
+                <div class="modal-actions" style="margin-top:10px;">
+                    <button type="button" onclick="clearSavedItems('${key}')">Clear all ${label.toLowerCase()}</button>
+                </div>
+            `);
+
+            const search = $("savedSearch");
+            const sort = $("savedSort");
+            const render = () => renderSavedItems(key, items, search.value, sort.value);
+            search.addEventListener("input", render);
+            sort.addEventListener("change", render);
+            render();
+            search.focus();
+        }
+
+        async function updateSavedNavCounts() {
+            try {
+                const [favorites, bookmarks] = await Promise.all([dbGet("Favorites"), dbGet("Bookmarks")]);
+                const favCount = (favorites || []).length;
+                const bookmarkCount = (bookmarks || []).length;
+                if ($("favoritesNav")) {
+                    $("favoritesNav").innerHTML = `★ &nbsp; Favorites${favCount ? ` <span style="margin-left:auto;opacity:.7;">${favCount}</span>` : ""}`;
+                }
+                if ($("bookmarksNav")) {
+                    $("bookmarksNav").innerHTML = `🔖 &nbsp; Bookmarks${bookmarkCount ? ` <span style="margin-left:auto;opacity:.7;">${bookmarkCount}</span>` : ""}`;
+                }
+            } catch (error) {
+                console.warn("Could not update saved counts", error);
+            }
+        }
+
+        function downloadResponse(content) {
+            const text = typeof content === "string" ? content : "";
+            const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `astra-response-${new Date().toISOString().replace(/[:.]/g, "-")}.txt`;
+            link.click();
+            URL.revokeObjectURL(link.href);
         }
 
         function prompts() {
@@ -2787,7 +3286,7 @@
             try {
                 const answer = await askGemini(session.messages);
                 removeThinking();
-                session.messages.push({ role: "assistant", content: answer, time: Date.now() });
+                session.messages.push({ role: "assistant", content: answer.text || "", images: answer.images || [], time: Date.now() });
                 await persist();
                 render();
                 scrollToBottom();
