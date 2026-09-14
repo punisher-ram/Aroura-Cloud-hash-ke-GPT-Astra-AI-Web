@@ -1026,16 +1026,12 @@
         }
 
         .attach-button input {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            opacity: 0;
-            pointer-events: none;
+            display: none !important;
         }
 
-        .attach-button:focus-within {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(32, 201, 151, .12);
+        .attach-button {
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         .send-button {
@@ -1424,6 +1420,102 @@
         @keyframes voiceDot {
             70% { box-shadow: 0 0 0 7px rgba(52,211,153,0); }
             100% { box-shadow: 0 0 0 0 rgba(52,211,153,0); }
+        }
+
+        .search-shell {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 11px;
+            color: var(--muted-2);
+            pointer-events: none;
+            font-size: 15px;
+        }
+
+        .search-input-enhanced {
+            margin-top: 0 !important;
+            padding-left: 32px !important;
+            padding-right: 72px !important;
+        }
+
+        .search-count {
+            position: absolute;
+            right: 11px;
+            color: var(--muted-2);
+            font-size: 9px;
+            pointer-events: none;
+        }
+
+        .search-help {
+            margin: 7px 2px 9px;
+            color: var(--muted-2);
+            font-size: 9px;
+        }
+
+        .search-result {
+            width: 100%;
+            text-align: left;
+            transition: transform 150ms ease, border-color 150ms ease, background 150ms ease, box-shadow 150ms ease;
+        }
+
+        .search-result:hover {
+            transform: translateY(-1px);
+            border-color: var(--border-strong);
+            background: color-mix(in srgb, var(--emerald) 5%, var(--bg-soft));
+            box-shadow: 0 8px 22px var(--shadow);
+        }
+
+        .search-result-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .search-result-top span {
+            flex: 0 0 auto;
+            color: var(--muted-2);
+            font-size: 8px;
+        }
+
+        .search-result-role {
+            margin-top: 5px;
+            color: var(--emerald-2);
+            font-size: 8px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+        }
+
+        .search-result-snippet {
+            margin-top: 4px;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .search-result mark {
+            padding: 1px 2px;
+            border-radius: 3px;
+            color: var(--text);
+            background: rgba(52, 211, 153, .20);
+            box-shadow: 0 0 0 1px rgba(52, 211, 153, .08);
+        }
+
+        .search-hit {
+            animation: searchHit 1.8s ease;
+        }
+
+        @keyframes searchHit {
+            0%, 100% { box-shadow: 0 10px 30px var(--shadow); }
+            35%, 65% { box-shadow: 0 0 0 3px rgba(52, 211, 153, .24), 0 14px 34px var(--shadow); }
+        }
+
+        .search-empty {
+            cursor: default;
         }
 
         .result {
@@ -2414,6 +2506,29 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+
+        .mobile-menu-button { display:none; }
+        .api-top-button.status-ok { color:var(--emerald-2); border-color:var(--border-strong); }
+        .key-choice { display:grid; gap:8px; margin-top:12px; }
+        .key-choice-card { display:grid; gap:4px; padding:11px 12px; border:1px solid var(--border); border-radius:11px; background:var(--panel-3); }
+        .key-choice-card span { color:var(--muted); font-size:9px; line-height:1.45; }
+        .mobile-menu-grid { display:grid; gap:7px; }
+        .mobile-menu-grid button { width:100%; padding:11px 12px; border:1px solid var(--border); border-radius:10px; color:var(--muted); background:var(--panel-3); text-align:left; transition:150ms ease; }
+        .mobile-menu-grid button:hover { color:var(--text); border-color:var(--border-strong); transform:translateY(-1px); }
+
+        @media (max-width:720px) {
+            .mobile-menu-button { display:grid; }
+            .api-top-button { display:none; }
+            .top-actions { gap:5px; }
+            .top-actions .model-select { width:145px; }
+            .toolbar { overflow-x:auto; flex-wrap:nowrap; scrollbar-width:none; }
+            .toolbar::-webkit-scrollbar { display:none; }
+            .toolbar > * { flex:0 0 auto; }
+            .message-actions { overflow-x:auto; flex-wrap:nowrap; scrollbar-width:none; }
+            .message-actions::-webkit-scrollbar { display:none; }
+            .message-actions > * { flex:0 0 auto; }
+        }
+
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after {
                 animation-duration: .001ms !important;
@@ -2464,6 +2579,8 @@
                 </div>
 
                 <div class="top-actions">
+                    <button id="apiKeyTopButton" class="icon-button api-top-button" type="button" title="Gemini connection" onclick="openApiKeyUI()">✦</button>
+                    <button id="mobileMenuButton" class="icon-button mobile-menu-button" type="button" title="Workspace menu" onclick="mobileMenu()">☰</button>
                     <select id="model" class="model-select" aria-label="AI model">
                         <option value="">Loading Gemini models…</option>
                     </select>
@@ -2574,7 +2691,7 @@
            All application JavaScript is intentionally kept in this file.
            ============================================================ */
 
-        // Gemini is called through Vercel server functions. The API key never enters browser code.
+        // Default Gemini uses the secure Vercel connection. Optional personal keys are memory-only and never persisted.
         const GEMINI_PROXY_BASE = "/api";
 
         const GEMINI_MODELS = [
@@ -2597,6 +2714,8 @@
             files: [],
             busy: false,
             abortController: null,
+            ownGeminiKey: "",
+            usingOwnGeminiKey: false,
             imageMode: false,
             editingMessageTime: null
         };
@@ -3226,7 +3345,46 @@
 
         function updateApiKeyStatus() {
             const top = $("apiKeyTopButton");
-            if (top) top.style.display = "none";
+            if (!top) return;
+            top.textContent = state.usingOwnGeminiKey ? "🔑" : "✦";
+            top.title = state.usingOwnGeminiKey ? "Using your Gemini key · this tab only" : "Using Astra's default Gemini connection";
+            top.classList.toggle("status-ok", true);
+        }
+
+        function openApiKeyUI() {
+            openModal("Gemini connection", `
+                <div class="key-choice">
+                    <div class="key-choice-card active"><strong>✦ Default Gemini</strong><span>Astra uses the secure Vercel Gemini connection automatically.</span></div>
+                    <div class="key-choice-card"><strong>🔑 Your own key</strong><span>Optional. Your key stays in this tab only and is cleared when you leave or refresh.</span></div>
+                </div>
+                <input id="ownApiKeyInput" class="api-key-input" type="password" autocomplete="off" spellcheck="false" placeholder="Paste your Gemini API key…">
+                <div class="api-key-actions">
+                    <button type="button" onclick="useDefaultGemini()">Use default</button>
+                    <button type="button" class="primary" onclick="connectOwnGeminiKey()">Use my key</button>
+                </div>
+            `);
+            const input=$("ownApiKeyInput");
+            if(input) input.value=state.usingOwnGeminiKey ? state.ownGeminiKey : "";
+            setTimeout(()=>input?.focus(),0);
+        }
+
+        async function connectOwnGeminiKey() {
+            const value=$("ownApiKeyInput")?.value.trim();
+            if(!value){ toast("Enter your Gemini API key"); return; }
+            state.ownGeminiKey=value;
+            state.usingOwnGeminiKey=true;
+            updateApiKeyStatus();
+            closeModal();
+            try { await models(); toast("Your Gemini key is active for this tab"); }
+            catch(error){ useDefaultGemini(); showSystemMessage(`That Gemini key could not be verified. ${error.message}`); }
+        }
+
+        async function useDefaultGemini() {
+            state.ownGeminiKey="";
+            state.usingOwnGeminiKey=false;
+            updateApiKeyStatus();
+            closeModal();
+            try { await models(); toast("Using Astra's default Gemini connection"); } catch {}
         }
 
         async function send() {
@@ -3388,10 +3546,15 @@
             const payload = { systemInstruction, contents, generationConfig };
             let response;
             try {
-                response = await fetch(`${GEMINI_PROXY_BASE}/chat`, {
+                const endpoint = state.usingOwnGeminiKey
+                    ? `${GEMINI_API_BASE}/models/${encodeURIComponent(model)}:generateContent`
+                    : `${GEMINI_PROXY_BASE}/chat`;
+                const headers = { "Content-Type": "application/json" };
+                if (state.usingOwnGeminiKey) headers["x-goog-api-key"] = state.ownGeminiKey;
+                response = await fetch(endpoint, {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ model, ...payload }),
+                    headers,
+                    body: JSON.stringify(state.usingOwnGeminiKey ? payload : { model, ...payload }),
                     signal: state.abortController?.signal
                 });
             } catch (error) {
@@ -3491,7 +3654,7 @@
             select.innerHTML = "<option value=\"\">Loading Gemini models…</option>";
 
             try {
-                const response = await fetch(`${GEMINI_PROXY_BASE}/models`);
+                const response = await fetch(state.usingOwnGeminiKey ? `${GEMINI_API_BASE}/models?key=${encodeURIComponent(state.ownGeminiKey)}` : `${GEMINI_PROXY_BASE}/models`);
                 const data = await response.json();
 
                 if (!response.ok) {
@@ -3973,47 +4136,104 @@
 
         function searchUI() {
             openModal("Search conversations", `
-                <input id="searchInput" class="search-input" placeholder="Search titles and messages…" autocomplete="off">
+                <div class="search-shell">
+                    <span class="search-icon">⌕</span>
+                    <input id="searchInput" class="search-input search-input-enhanced" placeholder="Search your conversations…" autocomplete="off" spellcheck="false">
+                    <span id="searchMatchCount" class="search-count"></span>
+                </div>
+                <div class="search-help">Searches every word and message in your saved local conversations.</div>
                 <div id="searchResults"></div>
             `);
 
             const input = $("searchInput");
+            const results = $("searchResults");
+            const count = $("searchMatchCount");
+
+            const highlight = (text, query) => {
+                const source = String(text || "");
+                const q = String(query || "").trim();
+                if (!q) return escapeHtml(source);
+                const escaped = escapeHtml(source);
+                const safeQuery = escapeHtml(q).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+                try {
+                    return escaped.replace(new RegExp(`(${safeQuery})`, "ig"), "<mark>$1</mark>");
+                } catch {
+                    return escaped;
+                }
+            };
+
+            const makeSnippet = (text, query) => {
+                const source = String(text || "");
+                const q = String(query || "").trim();
+                if (!q) return source.slice(0, 240);
+                const lower = source.toLocaleLowerCase();
+                const at = lower.indexOf(q.toLocaleLowerCase());
+                if (at < 0) return source.slice(0, 240);
+                const from = Math.max(0, at - 95);
+                const to = Math.min(source.length, at + q.length + 145);
+                return `${from ? "…" : ""}${source.slice(from, to)}${to < source.length ? "…" : ""}`;
+            };
+
             const renderResults = () => {
-                const query = input.value.trim().toLowerCase();
+                const query = input.value.trim();
+                const normalized = query.toLocaleLowerCase();
                 const matches = [];
 
-                if (!query) {
-                    $("searchResults").innerHTML = `<div class="result">Start typing to search your local conversation history.</div>`;
+                if (!normalized) {
+                    count.textContent = "";
+                    results.innerHTML = `<div class="result search-empty"><strong>Search your history</strong><div>Type any word or phrase and Astra will find the exact messages containing it.</div></div>`;
                     return;
                 }
 
                 state.sessions.forEach((session) => {
-                    session.messages.forEach((message) => {
-                        const haystack = `${session.title} ${message.content}`.toLowerCase();
-                        if (haystack.includes(query)) {
-                            matches.push({ session, message });
+                    (session.messages || []).forEach((message) => {
+                        const content = String(message.content || "");
+                        const title = String(session.title || "");
+                        const haystack = `${title}\n${content}`.toLocaleLowerCase();
+                        if (haystack.includes(normalized)) {
+                            matches.push({ session, message, content, title });
                         }
                     });
                 });
 
-                $("searchResults").innerHTML = matches.length
-                    ? matches.slice(0, 40).map(({ session, message }) => `
-                        <div class="result" onclick="selectChatFromSearch('${session.id}')">
-                            <strong>${escapeHtml(session.title)}</strong>
-                            <div>${escapeHtml(message.content.slice(0, 220))}</div>
-                        </div>
+                count.textContent = `${matches.length} ${matches.length === 1 ? "match" : "matches"}`;
+
+                results.innerHTML = matches.length
+                    ? matches.slice(0, 80).map(({ session, message, content, title }, index) => `
+                        <button class="result search-result" type="button" data-search-index="${index}">
+                            <div class="search-result-top">
+                                <strong>${highlight(title, query)}</strong>
+                                <span>${escapeHtml(new Date(message.time || session.created || Date.now()).toLocaleString())}</span>
+                            </div>
+                            <div class="search-result-role">${message.role === "user" ? "You" : "Astra AI"}</div>
+                            <div class="search-result-snippet">${highlight(makeSnippet(content, query), query)}</div>
+                        </button>
                     `).join("")
-                    : `<div class="result">No matching messages found.</div>`;
+                    : `<div class="result search-empty"><strong>No matches</strong><div>Nothing in your local conversation history contains “${escapeHtml(query)}”.</div></div>`;
+
+                results.querySelectorAll(".search-result").forEach((button) => {
+                    button.addEventListener("click", () => {
+                        const match = matches[Number(button.dataset.searchIndex)];
+                        if (!match) return;
+                        closeModal();
+                        selectChat(match.session.id);
+                        setTimeout(() => {
+                            const nodes = [...$("messages").querySelectorAll(".message")];
+                            const target = nodes.find((node) => {
+                                const text = node.textContent || "";
+                                return text.includes(String(match.content).slice(0, Math.min(80, String(match.content).length)));
+                            });
+                            target?.scrollIntoView({ behavior: "smooth", block: "center" });
+                            target?.classList.add("search-hit");
+                            setTimeout(() => target?.classList.remove("search-hit"), 1800);
+                        }, 80);
+                    });
+                });
             };
 
             input.addEventListener("input", renderResults);
             renderResults();
             input.focus();
-        }
-
-        function selectChatFromSearch(id) {
-            closeModal();
-            selectChat(id);
         }
 
         async function toggleSaved(key, message) {
@@ -4033,41 +4253,36 @@
 
         async function listSaved(key) {
             const items = (await dbGet(key)) || [];
-            const sorted = [...items].sort((a, b) => (b.savedAt || b.time || 0) - (a.savedAt || a.time || 0));
-            const cards = sorted.map((item, index) => {
-                const safeContent = String(item.content || "");
-                const sessionId = String(item.sessionId || state.currentId || "");
-                return `
-                    <div class="saved-item result" data-saved-index="${index}">
-                        <div class="saved-item-head">
-                            <div class="saved-item-time">${escapeHtml(new Date(item.time).toLocaleString())}</div>
-                            <button type="button" class="saved-item-remove" onclick="removeSavedItem('${key}', ${index})" aria-label="Remove saved item" title="Remove">×</button>
-                        </div>
-                        <div class="saved-item-preview">${escapeHtml(safeContent.slice(0, 900))}${safeContent.length > 900 ? "…" : ""}</div>
-                        <div class="saved-item-actions">
-                            <button type="button" onclick="copyText(${JSON.stringify(safeContent)})"><span>⧉</span> Copy</button>
-                            <button type="button" onclick="downloadTextFile(${JSON.stringify(safeContent)}, 'astra-saved.txt')"><span>↓</span> Download</button>
-                            <button type="button" onclick="closeModal(); selectChat(${JSON.stringify(sessionId)})"><span>↗</span> Open chat</button>
-                        </div>
-                    </div>
-                `;
-            }).join("");
-
+            const sorted = [...items].sort((a,b)=>(b.savedAt||b.time||0)-(a.savedAt||a.time||0));
             openModal(key, `
                 <div class="saved-toolbar">
                     <input id="savedSearch" class="search-input" placeholder="Search saved items…" autocomplete="off">
-                    <button type="button" class="saved-clear-button" onclick="clearSaved('${key}')">Clear all</button>
+                    <button type="button" class="saved-clear-button" id="savedClearButton">Clear all</button>
                 </div>
-                <div id="savedResults">${cards || `<div class="result">Nothing saved yet.</div>`}</div>
-            `);
+                <div id="savedResults">${sorted.length ? sorted.map((item,index)=>`
+                    <div class="saved-item result" data-saved-index="${index}">
+                        <div class="saved-item-head">
+                            <div class="saved-item-time">${escapeHtml(new Date(item.time).toLocaleString())}</div>
+                            <button type="button" class="saved-item-remove" data-action="remove" aria-label="Remove saved item" title="Remove">×</button>
+                        </div>
+                        <div class="saved-item-preview">${escapeHtml(String(item.content||"").slice(0,900))}${String(item.content||"").length>900?"…":""}</div>
+                        <div class="saved-item-actions">
+                            <button type="button" data-action="copy"><span>⧉</span> Copy</button>
+                            <button type="button" data-action="download"><span>↓</span> Download</button>
+                            <button type="button" data-action="open"><span>↗</span> Open chat</button>
+                        </div>
+                    </div>`).join("") : `<div class="result">Nothing saved yet.</div>`}</div>`);
 
-            const search = $("savedSearch");
-            search?.addEventListener("input", () => {
-                const q = search.value.trim().toLowerCase();
-                document.querySelectorAll("#savedResults .saved-item").forEach((el) => {
-                    el.style.display = !q || el.textContent.toLowerCase().includes(q) ? "block" : "none";
-                });
+            const results=$("savedResults");
+            results?.querySelectorAll(".saved-item").forEach((card)=>{
+                const index=Number(card.dataset.savedIndex);
+                card.querySelector('[data-action="remove"]')?.addEventListener("click",()=>removeSavedItem(key,index));
+                card.querySelector('[data-action="copy"]')?.addEventListener("click",async()=>{ const list=(await dbGet(key))||[]; const sortedNow=[...list].sort((a,b)=>(b.savedAt||b.time||0)-(a.savedAt||a.time||0)); if(sortedNow[index]){await copyText(sortedNow[index].content||"");toast("Copied");} });
+                card.querySelector('[data-action="download"]')?.addEventListener("click",async()=>{ const list=(await dbGet(key))||[]; const sortedNow=[...list].sort((a,b)=>(b.savedAt||b.time||0)-(a.savedAt||a.time||0)); if(sortedNow[index]) downloadTextFile(sortedNow[index].content||"",`astra-${key.toLowerCase()}-${Date.now()}.txt`); });
+                card.querySelector('[data-action="open"]')?.addEventListener("click",async()=>{ const list=(await dbGet(key))||[]; const sortedNow=[...list].sort((a,b)=>(b.savedAt||b.time||0)-(a.savedAt||a.time||0)); const item=sortedNow[index]; if(!item)return; const session=state.sessions.find(x=>x.messages?.some(m=>m.time===item.time && m.content===item.content)); closeModal(); if(session){selectChat(session.id); setTimeout(()=>{const nodes=[...$("messages").querySelectorAll(".message")]; const target=nodes.find(n=>n.textContent.includes(String(item.content||"").slice(0,80))); target?.scrollIntoView({behavior:"smooth",block:"center"});},80);} else {quick(item.content||"");} });
             });
+            $("savedSearch")?.addEventListener("input",()=>{ const q=$("savedSearch").value.trim().toLowerCase(); results?.querySelectorAll(".saved-item").forEach(el=>el.style.display=!q||el.textContent.toLowerCase().includes(q)?"block":"none"); });
+            $("savedClearButton")?.addEventListener("click",()=>clearSaved(key));
         }
 
         async function removeSavedItem(key, index) {
@@ -4103,6 +4318,22 @@
                 if (fav) fav.innerHTML = `★ &nbsp; Favorites <span style="margin-left:auto;opacity:.65">${favorites.length}</span>`;
                 if (book) book.innerHTML = `🔖 &nbsp; Bookmarks <span style="margin-left:auto;opacity:.65">${bookmarks.length}</span>`;
             } catch {}
+        }
+
+        function mobileMenu() {
+            openModal("Workspace", `
+                <div class="mobile-menu-grid">
+                    <button type="button" onclick="closeModal(); newChat()">＋ New conversation</button>
+                    <button type="button" onclick="closeModal(); searchUI()">⌕ Search conversations</button>
+                    <button type="button" onclick="closeModal(); listSaved('Favorites')">★ Favorites</button>
+                    <button type="button" onclick="closeModal(); listSaved('Bookmarks')">🔖 Bookmarks</button>
+                    <button type="button" onclick="closeModal(); rename()">✎ Rename conversation</button>
+                    <button type="button" onclick="closeModal(); analytics()">◒ Analytics</button>
+                    <button type="button" onclick="closeModal(); settings()">⚙ Settings</button>
+                    <button type="button" onclick="closeModal(); openApiKeyUI()">✦ Gemini connection</button>
+                    <button type="button" onclick="closeModal(); exportChat()">↓ Export conversation</button>
+                    <button type="button" onclick="closeModal(); clearCurrentChat()">⌫ Clear messages</button>
+                </div>`);
         }
 
         function prompts() {
