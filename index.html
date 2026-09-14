@@ -1666,6 +1666,18 @@
             font-weight: 900;
         }
 
+        .api-key-actions .danger {
+            color: #fb7185;
+            border-color: rgba(251, 113, 133, 0.28);
+            background: rgba(251, 113, 133, 0.07);
+        }
+
+        .api-key-actions .danger:hover {
+            color: #fecdd3;
+            border-color: rgba(251, 113, 133, 0.5);
+            background: rgba(251, 113, 133, 0.12);
+        }
+
         .api-key-panel {
             display: grid;
             gap: 7px;
@@ -2693,6 +2705,7 @@
 
         // Default Gemini uses the secure Vercel connection. Optional personal keys are memory-only and never persisted.
         const GEMINI_PROXY_BASE = "/api";
+        const GEMINI_API_BASE = "https://generativelanguage.googleapis.com/v1beta";
 
         const GEMINI_MODELS = [
             { label: "Gemini 3 Flash", id: "gemini-3-flash" },
@@ -3362,6 +3375,11 @@
                     <button type="button" onclick="useDefaultGemini()">Use default</button>
                     <button type="button" class="primary" onclick="connectOwnGeminiKey()">Use my key</button>
                 </div>
+                ${state.usingOwnGeminiKey ? `
+                    <div class="api-key-actions">
+                        <button type="button" class="danger" onclick="removeOwnGeminiKey()">✕ Remove my key</button>
+                    </div>
+                ` : ""}
             `);
             const input=$("ownApiKeyInput");
             if(input) input.value=state.usingOwnGeminiKey ? state.ownGeminiKey : "";
@@ -3385,6 +3403,15 @@
             updateApiKeyStatus();
             closeModal();
             try { await models(); toast("Using Astra's default Gemini connection"); } catch {}
+        }
+
+        async function removeOwnGeminiKey() {
+            state.ownGeminiKey = "";
+            state.usingOwnGeminiKey = false;
+            updateApiKeyStatus();
+            closeModal();
+            try { await models(); } catch {}
+            toast("Your Gemini key was removed from this tab");
         }
 
         async function send() {
